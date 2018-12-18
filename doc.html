@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>elowo Documentation</title>
+	<meta name="viewport" content="user-scalable=no, width=device-width" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+	<style type="text/css">
+html{
+	height:100%;
+	font-family: "Segoe UI","Roboto", sans-serif;
+}
+body{
+	min-height:100%;
+	padding:0;
+	margin:0;
+	position:relative;
+}
+body::after {
+  content: '';
+  display: block;
+  height: 40px; /* same as footer's height */
+}
+
+.doc {
+	margin: 0 3em;
+}
+.doc h1 {
+	text-align:center;
+	font-weight: 200;
+	font-size: 300%;
+}
+.doc h2 {
+	font-weight: 200;
+	font-size: 200%;
+	margin-bottom: 0.25em;
+}
+.doc h3 {
+	font-weight: 300;
+	font-size: 150%;
+}
+.doc a {
+	color: #68c;
+	text-decoration: none;
+}
+.doc a:hover {
+	text-decoration: underline;
+}
+.doc code {
+	font-family: "Consolas", monospace;
+	background-color: #f4f4f4;
+}
+.doc ul {
+	margin:0.5em 0 1em;
+	padding-left:1.5em;
+	list-style-type: square;
+}
+.doc li {
+	margin:0.25em 0;
+}
+
+#btn_back {
+	position:fixed;
+	top:8px;
+	left:8px;
+	width:32px;
+	height:32px;
+	z-index: 999;
+	border:none;
+	padding:0;
+	background:#68c;
+	opacity:0.5;
+}
+#btn_back:hover {
+	opacity:1;
+}
+button > svg {
+	width:24px;
+	height:24px;
+	margin:4px;
+}
+
+header {
+	color:white;
+	background: #68c;
+	padding: 0.1em 3em 1em;
+}
+header > div {
+	max-width:960px;
+	margin:0 auto;
+}
+header h1 {
+	font-weight: 200;
+	font-size: 300%;
+}
+header p {
+	font-weight: 200;
+	font-size: 150%;
+}
+header img {
+	width:256px;
+	float: right;
+	margin: 0 0 1em 2em;
+	cursor: pointer;
+}
+main {
+	margin: 0 auto 2em;
+	max-width: 960px;
+}
+
+footer {
+	position: absolute;
+	bottom:0;
+	width:100%;
+	height: 40px;
+
+	color:white;
+	background: #888;
+}
+footer ul {
+	max-width: 960px;
+	margin: 0 auto;
+	padding:0.5em 3em;
+	list-style-type: none;
+}
+footer li {
+	display: inline;
+}
+footer li:not(:first-child) {
+	padding-left:1em;
+}
+
+footer a {
+	color:white;
+	text-decoration: none;
+}
+footer a:hover {
+	text-decoration: underline;
+}
+	</style>
+	<script src="lib/marked.min.js"></script>
+	<script>
+function showPage(page) {
+	function switchTo(page) {
+		let elem = document.getElementById(page);
+		if(!elem)
+			return false;
+		for(let el = elem.parentElement.firstChild; el!==null; el=el.nextSibling)
+			if(el.nodeType === Node.ELEMENT_NODE && el.tagName=='DIV')
+				el.style.display = (el===elem) ? 'block' : 'none';
+		window.scrollTo(0,0);
+		return true;
+	}
+	if(switchTo(page))
+		return;
+	fetch('doc/'+page+'.md').then((resp)=>{
+		if(!resp.ok)
+			throw resp.statusText;
+		return resp.text();
+	}).then((text)=>{
+		let div = document.body.appendChild(document.createElement('div'));
+		div.id = page;
+		div.className = 'doc';
+		div.innerHTML = marked(text);
+		switchTo(page);
+	});
+}
+document.addEventListener("DOMContentLoaded", ()=>{
+	document.querySelector('header img').addEventListener('click', ()=>{ location.href = './'; });
+	if(location.hash)
+		showPage(location.hash.substr(location.hash.indexOf('#')+1));
+});
+window.addEventListener("hashchange", (evt)=>{
+	let url = evt.newURL;
+	let page = url.indexOf('#')>=0 ? url.substr(url.indexOf('#')+1) : 'welcome';
+	showPage(page.length ? page : 'welcome');
+}, false);
+	</script>
+</head>
+<body>
+	<button id="btn_back" title="back" onclick="history.back();"
+		><svg style="fill:none;stroke:white;stroke-width:3" viewBox="0 0 24 24"
+		><path d="M 12,2 l -10,10 l 10,10 M 2,12 l 22,0" /></svg></button>
+	<div id="welcome">
+		<header>
+			<div>
+				<img src="doc/happy_devices.svg" title="go to editor"/>
+				<h1>elowo</h1>
+				<p>Welcome to the friendly home computer in your browser&hellip; and in your pocket!</p>
+				<p>Easily create web apps, mobile apps, and desktop apps on any device, just using JavaScript!</p>
+			</div>
+		</header>
+		<main>
+			<article class="doc">
+				<h2>Examples</h2>
+				<ul>
+					<li><a href="./#./applets/test_console.js">hello, console.</a> - start here with basic text output</li>
+					<li><a href="./#./applets/test_canvas.js">hello, canvas!</a> - basic drawing and unified event handling</li>
+					<li><a href="./#./applets/test_resources.json">using resources</a> - add images and sound to your applet</li>
+					<li><a href="./#./applets/layers_test.json">layers</a> - organize and accelerate animated visualizations</li>
+					<li><a href="./#./applets/pocket%20piano.js">pocket piano</a> - advanced audio programming</li>
+					<li><a href="./#./applets/zoom_test.js">infinite zoom</a> - a 3D effect on the 2D canvas</li>
+					<li><a href="./#./applets/env_test.js">list environment</a> - shows which local data is readable by elowo applets</li>
+				</ul>
+			</article><article class="doc">
+				<h2>Documentation</h2>
+				<ul>
+					<li><a href="#api">API reference</a> - keep this under your pillow</li>
+					<li><a href="#story">background story</a> - why elowo</li>
+					<li><a href="#publishing">publishing guide</a> - share your app with the world</li>
+					<li><a href="#faq">FAQ</a> - frequently asked questions</li>
+				</ul>
+			</article>
+		</main>
+	</div>
+	<footer>
+		<ul>
+			<li><a href="#legal">legal terms</a></li>
+			<li><a href="#privacy">privacy policy</a></li>
+			<li><a href="#license">license</a></li>
+		</ul>
+	</footer>
+</body>
+</html>

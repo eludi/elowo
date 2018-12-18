@@ -1,0 +1,12 @@
+{
+	"short_name": "{title}",
+	"name": "{title}",
+	"description": "{descr}",
+	"icons": {iconData},
+	"start_url": ".",
+	"scope": "./",
+	"display": "{display}",
+	"background_color": "{color}",
+	"theme_color": "{color}",
+	"orientation": "any"
+}

@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<HTML>
+	<head>
+		<title>{title}</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="author" content="{author}" />
+		<meta name="description" content="{descr}" />
+		<meta name="keywords" content="{keywords}" />
+		<meta name="theme-color" content="{color}" />
+		<meta name="viewport" content="user-scalable=no, width=device-width" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="msapplication-TileImage" content="icon144.png" />
+		<meta name="msapplication-TileColor" content="{color}" />
+
+		<link rel="manifest" href="manifest.json" />
+		<link rel="icon" sizes="32x32" type="image/png" href="icon32.png" />
+		<link rel="icon" sizes="256x256" href="icon256.png" />
+		<link rel="apple-touch-icon" sizes="152x152" href="icon152.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="icon180.png" />
+
+		<script type="text/javascript" src="infra.js"></script>
+		<script type="text/javascript" src="fileUtils.js"></script>
+		<script type="text/javascript" src="app.js"></script>
+		<script type="text/javascript" src="runtime.js"></script>
+		<script type="text/javascript" src="data.js"></script>
+		<script type="text/javascript" src="main.js"></script>
+		<script type="text/javascript">
+if ('serviceWorker' in navigator && location.protocol != 'file:') {
+	navigator.serviceWorker.register('serviceworker.js', {scope:'./'})
+		.then(() =>{
+			console.log('service worker installed');
+		}).catch(err => console.error('Error', err));
+	window.addEventListener('beforeinstallprompt', evt => { evt.prompt(); });
+}
+		</script>
+
+		<style type="text/css">
+* {
+	margin: 0;
+	padding: 0;
+}
+body, html {
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	-webkit-text-size-adjust: 100%;
+	background: white;
+	font-family: sans-serif;
+	touch-action: none;
+}
+
+body > * {
+	width:100%;
+	height:100%;
+}
+
+.screen > div, .screen > canvas {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
+
+#canvas0 {
+	z-index: 0;
+}
+#console {
+	z-index: 80;
+	box-sizing: border-box;
+	padding: 0 0.25em;
+	font-size: 16px;
+	color: rgba(0,0,0,0.75);
+	background: transparent;
+	font-family: monospace;
+	font-weight: bold;
+	overflow: hidden;
+}
+#overlay {
+	z-index: 90;
+}
+#btn_close {
+	position:fixed;
+	top:8px;
+	right:8px;
+	width:32px;
+	height:32px;
+	z-index: 999;
+	opacity:0.15;
+	border:none;
+	background:black;
+}
+#btn_close:hover {
+	opacity:0.5;
+}
+		</style>
+	</head>
+
+	<body
+		><div id="screen_output" class="screen"
+			><canvas id="output_layer_0">this webapp requires javascript to run.</canvas
+			><div id="console"></div
+			><div id="overlay"></div
+		></div
+		><button id="btn_close" title="close"><svg style="fill:none;stroke:white;stroke-width:3" viewBox="0 0 24 24">
+			<path d="M 5,5 l 14,14 M 5,19 l 14,-14" /></svg></button
+></body>
+</html>

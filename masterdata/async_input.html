@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<HTML>
+	<head>
+		<title>async input</title>
+		<style type="text/css">
+html, body, input {
+	margin: 0;
+	padding: 0;
+	border: none;
+	font-family: 'Consolas', monospace;
+	font-weight: bold;
+	font-size: 100%;
+}
+input {
+	color: orange;
+}
+input:disabled {
+	background: none;
+}
+		</style>
+		<script type="text/javascript">
+function Console(cons = document.querySelector('#console')) {
+	this.log = function(msg) {
+		cons.appendChild(document.createElement('div')).innerHTML = String(msg);
+	}
+	this.input = function(msg) {
+		if(msg!==undefined)
+			this.log(msg);
+		return new Promise(function(resolve, reject) {
+			let inp = cons.appendChild(document.createElement('input'));
+			inp.focus();
+			inp.addEventListener('keydown', function(evt) {
+				if(evt.key==='Escape')
+					reject('User cancelled');
+				else if(evt.key==='Enter')
+					resolve(this.value);
+				else return;
+				this.blur();
+				this.disabled = true;
+			});
+		});
+	}
+}
+
+
+document.addEventListener('DOMContentLoaded', async ()=>{
+	let console = new Console();
+	try {
+		name = await console.input('What is your name?');
+		console.log('Hello, ' + name+'.');
+	}
+	catch(err) {
+		console.log(err);
+	};
+	await console.input('anything else?');
+	console.log('READY.');
+});
+		</script>
+	</head>
+
+	<body>
+		<div id="console"></div>
+	</body>
+</html>

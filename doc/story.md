@@ -1,0 +1,16 @@
+# elowo story
+
+## In the early days...
+...of computing personal devices were clunky, slow, and limited. However, as clumsy these home computers were, they had one strength that has now almost been forgotten: Almost all of them welcomed the user with an immediately available built-in programming language and screen editor. So an elementary school kid could teach herself programming just by following the instructions of the included handbook.
+
+Sure, like the devices, the programming interfaces were quirky and slow. Also, although BASIC used to be some common determinator, the resulting programs were hardly portable from one system to another. However, if you as owner and end-user just had this brillant little idea you wanted to try out or if you just needed a short sequence of calculations, nothing stopped you from hacking it in and run it immediately. Now try the same on your slick modern tablet or smartphone! While these devices nowadays are incredibly powerful in theory, they are at the same time strangely crippled by arbitrarily imposed usage restrictions. Of course, you can somehow install a respective development environment (likely on a different machine), download a big Software Development Kit, learn a bunch of tools and languages and start a serious development project. But this is a different level of approach at a much higher entry threshold. Current personal devices just have lost this originally available self empowerment of a simple built-in programming language.
+
+Fortunately a remedy for this retrograde development lies already hidden in a software component that is universally available. All kinds of personal computing devices nowadays contain a web browser, which has evolved over the years from a more or less passive window to the world wide web to a full-featured multimedia software platform and runtime environment. While intended for the interaction with content or services located on some remote servers, browsers provide a powerful infrastructure for local and at the same time portable apps written in standardized modern HTML5, which is a collection of diverse frontend technologies such as HTML (structure and content), CSS (visual appearance), Javascript (application logic), and communication protocols.
+
+What was just missing was an interface to write local apps immediately in the browser without requiring any server-side infrastructure. This is the purpose of elowo, which simplifies the browser software stack to pure Javascript and lets you say "hello world" to programming your device yourself.
+Javascript is finally the platform-independent true successor of early home or personal computers' BASIC, but already has advanced features included such as graphics, audio, and network communication. Doesn't this already sound too good to be true? But...
+
+## ...this is only the beginning of the journey!
+
+What if you could easily share your tiny brillant idea with your friends or even with the whole world?
+What if you could install your self-written program directly to the home screen of your device as any other app? So feel warmly invited to give elowo a try. For example, start by following and adapting the [available examples](#welcome), then take a closer look at [elowo's programming interfaces](#api), and finally [go public](#publishing). It's rewarding and fun!

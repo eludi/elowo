@@ -1,0 +1,31 @@
+<style>
+#blue_container {
+	width:100%;
+	height:100%;
+	display:flex;
+	align-items:flex-start;
+	justify-content:flex-end;
+}
+.blue_rounded {
+	width: 128px;
+	height: 128px;
+	border: none;
+	border-radius: 24px;
+	background: #28f;
+	font-family: sans-serif;
+	font-weight: bold;
+	font-size: 24px;
+	color: white;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+.blue_rounded:hover {
+	background: #5bf;
+	cursor: pointer;
+}
+</style>
+<div id="blue_container">
+<div class='blue_rounded' onclick="this.innerHTML='clicked!';">Hello,<br/>HTML<br/>world.</div>
+</div>

@@ -1,0 +1,38 @@
+{
+	"short_name": "elowo",
+	"name": "elowo",
+	"description": "a modern reincarnation of the home computer in your browser... and in your pocket!",
+	"icons": [
+		{
+			"src": "icon32.png",
+			"sizes": "32x32",
+			"type": "image/png"
+		},
+		{
+			"src": "icon144.png",
+			"sizes": "144x144",
+			"type": "image/png"
+		},
+		{
+			"src": "icon152.png",
+			"sizes": "152x152",
+			"type": "image/png"
+		},
+		{
+			"src": "icon180.png",
+			"sizes": "180x180",
+			"type": "image/png"
+		},
+		{
+			"src": "icon256.png",
+			"sizes": "256x256",
+			"type": "image/png"
+		}
+	],
+	"start_url": ".",
+	"scope": "./",
+	"display": "fullscreen",
+	"orientation": "any",
+	"background_color": "#ccc",
+	"theme_color": "#68c"
+}

@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<HTML>
+	<head>
+		<title>elowo</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="author" content="Gerald Franz, https://eludi.net">
+		<meta name="description" content="a modern reincarnation of the home computer in your browser... and in your pocket!"/>
+		<meta name="keywords" content="HTML5, JavaScript, Progressive Web App, canvas" />
+		<meta name="theme-color" content="#6688cc" />
+		<meta name="viewport" content="user-scalable=no, width=device-width" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="msapplication-TileImage" content="icon144.png">
+		<meta name="msapplication-TileColor" content="#6688cc">
+
+		<link rel="manifest" href="manifest.json" />
+		<link rel="icon" sizes="32x32" type="image/png" href="icon32.png" />
+		<link rel="icon" sizes="256x256" href="icon256.png" />
+		<link rel="apple-touch-icon" sizes="152x152" href="icon152.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="icon180.png" />
+
+		<script type="text/javascript" src="infra.js"></script>
+		<script type="text/javascript" src="lib/FileSaver.min.js"></script>
+		<script type="text/javascript" src="fileUtils.js"></script>
+		<script type="text/javascript" src="app.js"></script>
+		<script type="text/javascript" src="packager.js"></script>
+		<script type="text/javascript" src="ide.js"></script>
+
+		<style type="text/css">
+* {
+	margin: 0;
+	padding: 0;
+}
+body, html {
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	-webkit-text-size-adjust: 100%;
+	background: #68c;
+	font-family: sans-serif;
+	touch-action: none;
+}
+
+body > * {
+	width:100%;
+	height:100%;
+}
+body > *:not(:first-child) {
+	display:none;
+}
+
+textarea {
+	border: none;
+	border-radius: 0px;
+	background-color: transparent;
+	resize: none;
+	outline: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+button, .sidebar label, .toolbar label {
+	border:0;
+	background:none;
+	opacity:0.75;
+}
+button:hover, .sidebar label:hover, .toolbar label:hover {
+	opacity: 1.0;
+	cursor: pointer;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
+	-webkit-focus-ring-color: rgba(255, 255, 255, 0) !important;
+	outline: none !important;
+}
+
+#screen_editor {
+	display: flex;
+	flex-direction: column;
+}
+
+.toolbar {
+	box-sizing: border-box;
+	width:100%;
+	height:48px;
+	padding:8px;
+	display:flex;
+	align-items: center;
+}
+.toolbar > div, .toolbar > input {
+	font-size: 100%;
+	box-sizing: border-box;
+	flex-grow:1;
+	border: none;
+	padding:0 8px;
+	color:rgba(255,255,255,0.75);
+	background-color: transparent;
+}
+.toolbar > button, .toolbar label {
+	width:32px;
+	height:32px;
+}
+
+#editor_pos {
+	font-size: 85%;
+	flex-grow:0;
+}
+#editor_middle {
+	display: flex;
+	width:100%;
+	flex-grow:1;
+}
+#editor_sidebar {
+	flex: 0 0 auto;
+	overflow-x: hidden;
+	overflow-y: auto;
+	transition: all 0.25s ease-out;
+}
+.open {
+	width:160px;
+}
+.closed {
+	width:0px;
+}
+#editor_sidebar > ul {
+	width:160px;
+	list-style: none;
+}
+#editor_sidebar > ul > li {
+	padding:0.5em;
+}
+.sidebar button, .sidebar label {
+	color:white;
+	font-size: inherit;
+}
+.sidebar hr {
+	border:0;
+	height:1px;
+	background: rgba(255,255,255,0.5);
+}
+
+#editor {
+	flex:1;
+	font-size: 16px;
+	box-sizing: border-box;
+	margin: 0 0.5em;
+	padding:0 0.2em;
+	color: #68c;
+	background-color: #109;
+	font-family: monospace;
+	font-weight: bold;
+	overflow: auto;
+}
+
+#editor_bottom {
+	box-sizing: border-box;
+	padding:2px 8px;
+	display:flex;
+	align-items: flex-start;
+}
+#console {
+	font-size: 14px;
+	font-weight: bold;
+	color: #ddf;
+	overflow: hidden;
+	line-height:1.1em;
+	flex-grow: 1;
+	transition: all 0.1s;
+}
+.console_small {
+	height:1.1em;
+}
+.console_big {
+	height:3.2em;
+}
+#editor_bottom > button {
+	width: 32px;
+}
+
+#files_middle, #resources_middle, #meta_middle {
+	width:100%;
+	height:calc(100% - 48px - 0.5em);
+	overflow-y: auto;
+}
+#files_list, #resources_list {
+	list-style: none;
+}
+#files_list li, #resources_list li {
+	display:flex;
+	align-items: center;
+	box-sizing: border-box;
+	margin: 0.5em;
+	padding: 0.5em;
+	color: #68c;
+	background-color: #109;
+}
+#files_list li:hover {
+	color: #bcf;
+	cursor: pointer;
+}
+#files_list li:first-child, #resources_list li:first-child {
+	margin-top: 0;
+}
+
+#files_list li > .center, #resources_list li > .center {
+	flex-grow: 1;
+}
+#resources_list > li > div:first-child > * {
+	width:64px;
+	height:64px;
+	margin-right:1em;
+}
+#files_list button, #resources_list button {
+	width:32px;
+	height:32px;
+}
+#resources_list input, #meta_middle > input, #meta_middle > select {
+	font-size: 100%;
+	font-weight: bold;
+	color: white;
+	border: none;
+	background-color: transparent;
+}
+#meta_middle {
+	display: flex;
+	flex-direction: column;
+	box-sizing: border-box;
+	width: calc(100% - 1em);
+	margin: 0 0.5em;
+	font-size: 100%;
+	font-weight: bold;
+	font-family: monospace;
+	color: #68c;
+	background-color: #109;
+}
+#meta_middle > input, #meta_middle > select {
+	display:block;
+	margin:0 0.5em;
+	font-family: monospace;
+	background-color: #080077;
+}
+#meta_middle > input {
+	line-height:2em;
+}
+#meta_middle > select, #meta_middle > input[type="color"] {
+	height:2em;
+}
+#meta_middle > label {
+	display:block;
+	box-sizing: border-box;
+	margin:0.5em 0.5em 0 0.5em;
+}
+
+		</style>
+	</head>
+
+	<body
+		><div id="screen_editor"
+			><div id="editor_toolbar" class="toolbar"
+				><button value="toggleMenu" title="menu"><svg viewbox="-4 -4 28 28" style="fill:white;"
+					><rect width="20" height="4"></rect><rect y="8" width="20" height="4"></rect><rect y="16" width="20" height="4"></rect></svg></button
+				><input id="editor_title" size="8"
+				/><div id="editor_pos"></div
+				><button value="run" title="run"><svg viewbox="0 0 24 24"><path style="fill:white;" d="M 6 4 l 0 16 l 16 -8 z"></path></svg></button
+				><button value="screen resources" title="resources"><svg style="fill:white;" viewBox="0 0 24 24">
+					<path d="M 4,2 C 2.9069372,2 2,2.9069372 2,4 v 16 c 0,1.093063 0.9069372,2 2,2 h 16 c 1.093063,0 2,-0.906937 2,-2 V 4 C 22,2.9069372 21.093063,2 20,2 Z M 4,6 H 20 V 20 H 4 Z" />
+					<path d="m 19.018466,11.108776 -5.427557,1.248358 v 4.962468 C 13.280894,17.165045 12.90731,17.075284 12.5,17.075284 c -0.472332,0 -0.905316,0.11504 -1.238636,0.319602 -0.33332,0.204562 -0.579546,0.520855 -0.579546,0.893466 0,0.37261 0.246226,0.688905 0.579546,0.893466 C 11.594684,19.38638 12.027668,19.5 12.5,19.5 c 0.472332,0 0.905317,-0.11362 1.238636,-0.318182 0.333321,-0.204561 0.579546,-0.520856 0.579546,-0.893466 0,-0.01871 -0.0073,-0.03556 -0.0085,-0.05398 h 0.0085 v -4.343148 l 3.984375,-0.891823 v 3.181217 c -0.310015,-0.154556 -0.683599,-0.242898 -1.090909,-0.242898 -0.472332,0 -0.905317,0.113619 -1.238637,0.318182 -0.33332,0.204561 -0.579545,0.520855 -0.579545,0.893466 0,0.372611 0.246225,0.688905 0.579545,0.893466 0.33332,0.204561 0.766305,0.318182 1.238637,0.318182 0.472331,0 0.905317,-0.113621 1.238636,-0.318182 0.333321,-0.204561 0.579546,-0.520855 0.579546,-0.893466 0,-0.02415 -0.0093,-0.04594 -0.01137,-0.0696 z" />
+					<path d="M 9.4316406,7 C 7.720709,7 6.1743656,7.9135315 5.2480469,9.3378906 L 5.0078125,9.7285156 5.25,10.164062 C 6.1765404,11.58701 7.7216615,12.5 9.4316406,12.5 c 1.7109324,0 3.2553214,-0.913531 4.1816404,-2.337891 L 13.845703,9.7558594 13.611328,9.3359375 C 12.684793,7.9129846 11.14162,6.9999998 9.4316406,7 Z M 8.953125,7.9472656 C 8.2531163,8.1570274 7.7324219,8.8025628 7.7324219,9.5664062 c 0,0.9308368 0.7683824,1.6972658 1.6992187,1.6972658 0.9308364,0 1.6972654,-0.766429 1.6972654,-1.6972658 0,-0.7638434 -0.519213,-1.4093788 -1.2187498,-1.6191406 C 11.076567,8.0945412 12.100348,8.7717685 12.775391,9.75 c -0.76596,1.109984 -1.98088,1.833984 -3.3437504,1.833984 -1.3628697,0 -2.5777911,-0.724001 -3.34375,-1.833984 C 6.7629325,8.7717686 7.7867146,8.0945412 8.953125,7.9472656 Z" />
+				</svg></button
+				><button value="screen meta" title="metadata"><svg style="fill:white;" viewBox="0 0 24 24">
+					<path d="M 6.0019531 3.5839844 C 4.9033472 3.5839844 4.0534533 3.8622539 3.4511719 4.4199219 C 2.8488905 4.9775898 2.546875 5.7643412 2.546875 6.7792969 L 2.546875 9.9082031 C 2.546875 10.337608 2.4099761 10.672312 2.1367188 10.912109 C 1.869038 11.151906 1.4907478 11.271484 1 11.271484 L 1 13.3125 C 1.4907478 13.3125 1.8690381 13.432078 2.1367188 13.671875 C 2.4099759 13.911672 2.546875 14.246377 2.546875 14.675781 L 2.546875 17.8125 C 2.546875 18.827455 2.8488905 19.611971 3.4511719 20.164062 C 4.0534533 20.721731 4.9033472 21 6.0019531 21 L 6.0019531 19.083984 C 5.550242 19.083984 5.2024052 18.964406 4.9570312 18.724609 C 4.7116575 18.484812 4.5878906 18.141448 4.5878906 17.695312 L 4.5878906 14.474609 C 4.5878906 13.48196 4.2900641 12.771201 3.6933594 12.341797 C 3.6756324 12.328757 3.6510905 12.321244 3.6328125 12.308594 C 3.6513135 12.296454 3.6754234 12.287911 3.6933594 12.275391 C 4.2900641 11.85714 4.5878906 11.168173 4.5878906 10.208984 L 4.5878906 6.8789062 C 4.5878906 6.4383487 4.7116575 6.0991722 4.9570312 5.859375 C 5.2024052 5.6195777 5.550242 5.5 6.0019531 5.5 L 6.0019531 3.5839844 z M 17.998047 3.5839844 L 17.998047 5.5 C 18.449758 5.5 18.797595 5.6195777 19.042969 5.859375 C 19.288343 6.0991722 19.412109 6.4383487 19.412109 6.8789062 L 19.412109 10.208984 C 19.412109 11.177129 19.700856 11.873027 20.269531 12.304688 C 19.700472 12.753035 19.412109 13.473308 19.412109 14.474609 L 19.412109 17.695312 C 19.412109 18.141448 19.288343 18.484812 19.042969 18.724609 C 18.797595 18.964406 18.449758 19.083984 17.998047 19.083984 L 17.998047 21 C 19.096653 21 19.946547 20.72173 20.548828 20.164062 C 21.151109 19.611971 21.453125 18.827455 21.453125 17.8125 L 21.453125 14.759766 C 21.453125 14.330361 21.585835 13.995657 21.853516 13.755859 C 22.126773 13.516062 22.509253 13.396484 23 13.396484 L 23 11.1875 C 22.509253 11.1875 22.126773 11.067922 21.853516 10.828125 C 21.585835 10.588328 21.453125 10.253623 21.453125 9.8242188 L 21.453125 6.7792969 C 21.453125 5.7643412 21.151109 4.9775898 20.548828 4.4199219 C 19.946547 3.8622539 19.096653 3.5839844 17.998047 3.5839844 z M 7.9492188 15.212891 A 1.25 1.2499999 0 0 0 6.6992188 16.462891 A 1.25 1.2499999 0 0 0 7.9492188 17.712891 A 1.25 1.2499999 0 0 0 9.1992188 16.462891 A 1.25 1.2499999 0 0 0 7.9492188 15.212891 z M 11.841797 15.212891 A 1.2500001 1.25 0 0 0 10.591797 16.462891 A 1.2500001 1.25 0 0 0 11.841797 17.712891 A 1.2500001 1.25 0 0 0 13.091797 16.462891 A 1.2500001 1.25 0 0 0 11.841797 15.212891 z M 16.087891 15.212891 A 1.2500001 1.25 0 0 0 14.837891 16.462891 A 1.2500001 1.25 0 0 0 16.087891 17.712891 A 1.2500001 1.25 0 0 0 17.337891 16.462891 A 1.2500001 1.25 0 0 0 16.087891 15.212891 z" />
+				</svg></button
+			></div
+			><div id="editor_middle"
+				><nav id="editor_sidebar" class="closed"
+					><ul class="sidebar"
+						><li><button value="new">new</button></li
+						><li><button value="open">open</button></li
+						><li><input type="file" id="loadFS" style="display:none;" multiple="multiple"/><label for="loadFS">import</label></li
+						><li><button value="saveFS">export</button></li
+						><li><button value="compile">package</button></li
+						><li><hr/></li
+						><li><button value="doc">help</button></li
+						><li><button value="doc legal">legal notices</button></li
+						><li><button value="doc privacy">privacy policy</button></li
+						><li>v1.20181218a</li
+					></ul
+				></nav
+				><textarea id="editor" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false">console.log('Hello, world.');
+</textarea
+			></div
+			><div id="editor_bottom"
+				><div id="console" class="console_small"></div
+				><button id="btn_toggleConsole" value="toggleConsole"><svg viewbox="0 0 32 16"><path style="fill:none;stroke:white;stroke-width:2;" d="M 3 15 l 13 -13 l 13 13"></path></svg></button
+			></div
+		></div
+		><div id="screen_files"
+			><div class="toolbar"
+				><div id="files_title">open applet</div
+				><button value="screen editor" title="editor"><svg style="fill:white;" viewBox="0 0 24 24">
+					<path d="M 19.924706,7.3694118 12.639764,14.65353 C 12.255176,14.018589 11.780823,13.394353 11.200235,12.817883 10.613881,12.234 9.9797637,11.757176 9.3316465,11.373412 L 16.630588,4.075294 c 0.66953,0.3154118 1.334941,0.7609412 1.933647,1.3596472 0.600353,0.5995294 1.045059,1.2649412 1.360471,1.9344706 z M 11.294117,16 H 8.0000003 v -3.294117 l 0.3952935,-0.395295 c 0.6695287,0.317059 1.3349409,0.762589 1.9336472,1.360471 0.599529,0.600353 1.044235,1.264118 1.36047,1.933647 z M 20.875883,6.4190589 C 20.491294,5.7832941 20.016941,5.1607058 19.436353,4.5834117 18.849177,4.0003528 18.215882,3.5227058 17.567765,3.138941 l 1.138117,-1.1389412 c 0,0 1.647059,0 2.470589,0.8235294 C 22,3.6470587 22,5.2941176 22,5.2941176 Z M 3.9999996,2 C 2.9069375,2 1.9999998,2.9069372 1.9999998,4 v 16 c 0,1.093063 0.9069377,2 1.9999998,2 H 20 c 1.093063,0 2,-0.906937 2,-2 V 7.6582031 L 20,9.65625 V 20 H 3.9999996 V 6 H 12.34375 l 3.998047,-4 z" />
+				</svg></button
+			></div
+			><div id="files_middle"><ul id="files_list"></ul></div
+		></div
+		><div id="screen_resources"
+			><div class="toolbar"
+				><div>resources</div
+				><input type="file" id="importRes" style="display:none;" multiple="multiple"/><label for="importRes" title="import"><svg viewbox="0 0 24 24" style="fill:white;">
+					<path d="M 4 2 C 2.9069372 2 2 2.9069372 2 4 L 2 8 L 4 8 L 4 6 L 20 6 L 20 20 L 4 20 L 4 17 L 2 17 L 2 20 C 2 21.093063 2.9069372 22 4 22 L 20 22 C 21.093063 22 22 21.093063 22 20 L 22 4 C 22 2.9069372 21.093063 2 20 2 L 4 2 z M 8.4492188 8.5117188 C 8.0368079 8.5520735 7.6434606 8.8340763 7.5566406 9.2636719 C 7.4266646 9.7085219 7.687395 10.128461 8.015625 10.40625 L 9.1035156 11.494141 C 7.0415896 11.496541 4.9797877 11.489647 2.9179688 11.498047 C 2.2177138 11.528327 1.7618665 12.391624 2.1328125 12.986328 C 2.3548315 13.422418 2.8604906 13.529022 3.3066406 13.494141 L 9.1113281 13.494141 C 8.6569241 13.954539 8.1913576 14.405889 7.7441406 14.873047 C 7.2885236 15.402097 7.5982834 16.325812 8.2871094 16.464844 C 8.7460234 16.60039 9.1619186 16.320056 9.4472656 15.988281 C 10.393441 15.036973 11.351518 14.094344 12.291016 13.136719 C 12.436595 12.953616 12.514829 12.718193 12.507812 12.484375 C 12.522232 11.9285 12.016982 11.612501 11.683594 11.246094 C 10.837751 10.405841 10.001166 9.5536411 9.1484375 8.7207031 C 8.9499766 8.5496127 8.6966653 8.4875059 8.4492188 8.5117188 z" />
+				</svg></label
+				><button value="exportRes" title="export"><svg style="fill:white;" viewBox="0 0 24 24">
+					<path d="M 4 2 C 2.9069372 2 2 2.9069372 2 4 L 2 20 C 2 21.093063 2.9069372 22 4 22 L 20 22 C 21.093063 22 22 21.093063 22 20 L 22 17 L 20 17 L 20 20 L 4 20 L 4 6 L 20 6 L 20 8 L 22 8 L 22 4 C 22 2.9069372 21.093063 2 20 2 L 4 2 z M 17.941406 8.5117188 C 17.528995 8.5520735 17.135648 8.8340763 17.048828 9.2636719 C 16.918852 9.7085219 17.179582 10.128461 17.507812 10.40625 L 18.595703 11.494141 C 16.533777 11.496541 14.479788 11.489647 12.417969 11.498047 C 11.717714 11.528327 11.261867 12.391624 11.632812 12.986328 C 11.854831 13.422418 12.360491 13.529022 12.806641 13.494141 L 18.603516 13.494141 C 18.149112 13.954539 17.683545 14.405889 17.236328 14.873047 C 16.780711 15.402097 17.090471 16.325812 17.779297 16.464844 C 18.238211 16.60039 18.654106 16.320056 18.939453 15.988281 C 19.885628 15.036973 20.843705 14.094344 21.783203 13.136719 C 21.928782 12.953616 22.007016 12.718193 22 12.484375 C 22.01442 11.9285 21.509169 11.612501 21.175781 11.246094 C 20.329938 10.405841 19.493353 9.5536411 18.640625 8.7207031 C 18.442164 8.5496127 18.188853 8.4875059 17.941406 8.5117188 z" />
+				</svg></button
+				><button value="screen editor" title="editor"><svg style="fill:white;" viewBox="0 0 24 24">
+					<path d="M 19.924706,7.3694118 12.639764,14.65353 C 12.255176,14.018589 11.780823,13.394353 11.200235,12.817883 10.613881,12.234 9.9797637,11.757176 9.3316465,11.373412 L 16.630588,4.075294 c 0.66953,0.3154118 1.334941,0.7609412 1.933647,1.3596472 0.600353,0.5995294 1.045059,1.2649412 1.360471,1.9344706 z M 11.294117,16 H 8.0000003 v -3.294117 l 0.3952935,-0.395295 c 0.6695287,0.317059 1.3349409,0.762589 1.9336472,1.360471 0.599529,0.600353 1.044235,1.264118 1.36047,1.933647 z M 20.875883,6.4190589 C 20.491294,5.7832941 20.016941,5.1607058 19.436353,4.5834117 18.849177,4.0003528 18.215882,3.5227058 17.567765,3.138941 l 1.138117,-1.1389412 c 0,0 1.647059,0 2.470589,0.8235294 C 22,3.6470587 22,5.2941176 22,5.2941176 Z M 3.9999996,2 C 2.9069375,2 1.9999998,2.9069372 1.9999998,4 v 16 c 0,1.093063 0.9069377,2 1.9999998,2 H 20 c 1.093063,0 2,-0.906937 2,-2 V 7.6582031 L 20,9.65625 V 20 H 3.9999996 V 6 H 12.34375 l 3.998047,-4 z" />
+				</svg></button
+			></div
+			><div id="resources_middle"><ul id="resources_list"></ul></div
+		></div
+		><div id="screen_meta"
+			><div class="toolbar"
+				><div id="meta_title">metadata</div
+				><button value="screen editor" title="editor"><svg style="fill:white;" viewBox="0 0 24 24">
+					<path d="M 19.924706,7.3694118 12.639764,14.65353 C 12.255176,14.018589 11.780823,13.394353 11.200235,12.817883 10.613881,12.234 9.9797637,11.757176 9.3316465,11.373412 L 16.630588,4.075294 c 0.66953,0.3154118 1.334941,0.7609412 1.933647,1.3596472 0.600353,0.5995294 1.045059,1.2649412 1.360471,1.9344706 z M 11.294117,16 H 8.0000003 v -3.294117 l 0.3952935,-0.395295 c 0.6695287,0.317059 1.3349409,0.762589 1.9336472,1.360471 0.599529,0.600353 1.044235,1.264118 1.36047,1.933647 z M 20.875883,6.4190589 C 20.491294,5.7832941 20.016941,5.1607058 19.436353,4.5834117 18.849177,4.0003528 18.215882,3.5227058 17.567765,3.138941 l 1.138117,-1.1389412 c 0,0 1.647059,0 2.470589,0.8235294 C 22,3.6470587 22,5.2941176 22,5.2941176 Z M 3.9999996,2 C 2.9069375,2 1.9999998,2.9069372 1.9999998,4 v 16 c 0,1.093063 0.9069377,2 1.9999998,2 H 20 c 1.093063,0 2,-0.906937 2,-2 V 7.6582031 L 20,9.65625 V 20 H 3.9999996 V 6 H 12.34375 l 3.998047,-4 z" />
+				</svg></button
+			></div
+			><div id="meta_middle"
+				><label for="meta_title">title</label><input id="meta_title"
+				/><label for="meta_author">author</label><input id="meta_author"
+				/><label for="meta_descr">description</label><input id="meta_descr"
+				/><label for="meta_keywords">keywords</label><input id="meta_keywords"
+				/><label for="meta_color">theme color</label><input id="meta_color" type="color"
+				/><label for="meta_display">display mode</label><select id="meta_display"
+					><option value="standalone">standalone window</option
+					><option value="fullscreen">fullscreen window</option
+					><option value="browser">browser window</option
+				></select
+			></div
+		></div
+		><div id="screen_invisible"
+			><button id="btn_delete" title="delete"><svg style="fill:none;stroke:white;stroke-width:3" viewBox="0 0 24 24">
+				<path d="M 5,5 l 14,14 M 5,19 l 14,-14" /></svg></button
+			><svg id="musical_note" style="fill:white;" viewBox="0 0 24 24">
+				<path d="M 20,2.90625 7.5,5.0800781 V 19 h 1 V 8.421875 L 19,6.5957031 V 17 h 1 z" />
+				<path d="m 17,15 c -0.779347,0 -1.492991,0.188406 -2.042969,0.525933 C 14.407053,15.863459 14,16.385192 14,17 c 0,0.614808 0.407053,1.136541 0.957031,1.474067 C 15.507009,18.811594 16.220653,19 17,19 17.779347,19 18.492991,18.811594 19.042969,18.474067 19.592947,18.136541 20,17.614808 20,17 20,16.385192 19.592947,15.863459 19.042969,15.525933 18.492991,15.188406 17.779347,15 17,15 Z" />
+				<path d="M 5.5,17 C 4.7206526,17 4.0070091,17.188406 3.4570312,17.525933 2.9070534,17.863459 2.5,18.385192 2.5,19 c 0,0.614808 0.4070534,1.136541 0.9570312,1.474067 C 4.0070091,20.811594 4.7206526,21 5.5,21 6.2793474,21 6.9929909,20.811594 7.5429688,20.474067 8.0929466,20.136541 8.5,19.614808 8.5,19 8.5,18.385192 8.0929466,17.863459 7.5429688,17.525933 6.9929909,17.188406 6.2793474,17 5.5,17 Z" />
+			</svg
+		></div
+	></body>
+</html>

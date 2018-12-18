@@ -1,0 +1,72 @@
+const version = '018';
+const cacheWhitelist = ['static_'+version, 'app'];
+
+this.addEventListener('install', (event)=>{
+	console.log('cache version '+version+' installing...');
+	this.skipWaiting();
+	event.waitUntil(caches.open('static_'+version).then((cache)=>{
+		return cache.addAll([
+			'./lib/jszip.min.js',
+			'./lib/base64.min.js',
+			'./lib/FileSaver.min.js',
+			'./lib/marked.min.js',
+			'./templates/index.html',
+			'./templates/manifest.json',
+			'./templates/serviceworker.js',
+			'./app.js',
+			'./doc.html',
+			'./doc/api.md',
+			'./doc/happy_devices.svg',
+			'./doc/faq.md',
+			'./doc/legal.md',
+			'./doc/license.md',
+			'./doc/privacy.md',
+			'./doc/publishing.md',
+			'./doc/story.md',
+			'./fileUtils.js',
+			'./icon32.png',
+			'./icon144.png',
+			'./icon152.png',
+			'./icon180.png',
+			'./icon256.png',
+			'./ide.js',
+			'./index.html',
+			'./',
+			'./infra.js',
+			'./manifest.json',
+			'./packager.js',
+			'./run.html',
+			'./runtime.js'
+		]);
+	}));
+});
+
+this.addEventListener('activate', (event)=>{
+	event.waitUntil(
+		this.clients.claim().then(()=>{
+		caches.keys().then((cacheNames)=>{
+			return Promise.all(cacheNames.map((name)=>{
+				if (cacheWhitelist.indexOf(name) === -1)
+					return caches.delete(name);
+			}));
+		}).then(()=>{
+			console.log('cache version '+version+' ready to handle fetches.');
+		})
+	}));
+});
+
+this.addEventListener('fetch', (event)=>{
+	event.respondWith(
+		caches.match(event.request).then((response)=>{
+			if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin')
+				return;
+			return response || fetch(event.request);
+		})
+	);
+});
+
+this.addEventListener('message', (event)=>{
+	if(event.data)
+		event = JSON.parse(event.data);
+	console.log("serviceworker received client message:", event);
+});
