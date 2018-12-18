@@ -8,6 +8,10 @@
   incompatible change, we will clearly communicate it and most probably only trivial changes will be
   required to your code.
 
+#### How can I report an issue
+
+- Please use [Github issue tracking](https://github.com/eludi/elowo/issues) for this.
+
 #### Which browsers are supported?
 
 - Elowo relies on APIs that have only recently been added to the living HTML5 standard
