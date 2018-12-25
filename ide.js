@@ -60,9 +60,10 @@ ide.editor = {
 		}
 	},
 	handleEnterEvent: function() {
-		setTimeout(()=>{
-			this.insertAtCursor(this.textarea, this.currentIndent);
-		}, 0);
+		if(this.currentIndent)
+			setTimeout(()=>{
+				this.insertAtCursor(this.textarea, this.currentIndent);
+			}, infra.isIOS() ? 10 : 0);
 	},
 
 	init: function(title) {
@@ -92,11 +93,11 @@ ide.editor = {
 		[ 'input', 'keydown', 'keyup', 'click', 'focus' ].forEach((evtName)=>{
 			this.textarea.addEventListener(evtName, (e)=>{
 				let pos = this.getCursorPos(this.textarea);
-				document.querySelector('#editor_pos').innerHTML = 'Ln&nbsp;'+pos.y+' Col&nbsp;'+pos.x;
+				document.querySelector('#editor_pos').innerHTML = 'Ln&nbsp;'+pos.y+'<br/>Col&nbsp;'+pos.x;
 			});
 		});
 		this.textarea.addEventListener('keypress', (evt)=>{
-			if(evt.keyCode==13 || evt.which==13)
+			if(evt.key=='Enter')
 				this.handleEnterEvent();
 		});
 	}
@@ -322,8 +323,10 @@ ide.downloadApplet = function(url, callback) {
 	fetch(url, { mode:'cors' }).then((resp)=>{
 		if(!resp.ok)
 			return this.error('Download '+url+' failed: '+resp.statusText);
+		let fname = url.substr(url.lastIndexOf('/')+1);
+		fname = decodeURIComponent((fname+'').replace(/\+/g, '%20'));
 		file = {
-			name:url.substr(url.lastIndexOf('/')+1),
+			name:fname,
 			type:resp.headers.get("content-type")
 		};
 		return resp.text();

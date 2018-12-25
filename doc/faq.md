@@ -17,7 +17,16 @@
 - Elowo relies on APIs that have only recently been added to the living HTML5 standard
   (e.g, service workers, cache API). Due to that, the browser needs to be fairly modern.
   Elowo is regularly tested on the most recent versions of Mozilla Firefox, Google Chrome
-  (desktop and mobile), Microsoft Edge, and Apple Mobile Safari.
+  (desktop and mobile), Microsoft Edge, Web/Epiphany, and Apple Mobile Safari.
+
+#### What about Mac support?
+
+- We test on Web/Epiphany (which uses the same WebKit browser engine as Safari) and iOS Mobile Safari,
+  so we hope to indirectly cover maybe 98 percent of macOS Safari as well.
+  But we do not own a Mac, so unfortunately we cannot regularly test elowo on it. So if you encounter
+  issues (most probably when using the Safari browser), please report them to us, ideally with
+  a suggestion how to fix them. In the meanwhile please try a different browser such as Firefox or
+  Chrome.
 
 #### What does elowo mean?
 

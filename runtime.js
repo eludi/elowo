@@ -45,8 +45,10 @@ _app = (function(parent) {
 		};
 		this.console.width = function(w) { document.querySelector('#console').style.width = w; return this; }
 		this.console.height = function(h) {
-			if(typeof h === 'number')
-				h = (h*1.2)+'em';
+			if(typeof h === 'number') {
+				const lineHeight = infra.isIOS() ? 1.1 : 1.2;
+				h = (h*lineHeight)+'em';
+			}
 			document.querySelector('#console').style.height = h;
 			return this;
 		}
@@ -63,7 +65,6 @@ _app = (function(parent) {
 				let inp = cons.appendChild(document.createElement('input'));
 				let ovl = document.querySelector('#overlay');
 				let focusIOS = ()=>{ inp.focus(); }
-				let isIOS = ()=>{ return /ipad|iphone|ipod/i.test(navigator.userAgent.toLowerCase()); }
 
 				if(prompt===undefined && value===undefined)
 					inp.placeholder = '>';
@@ -76,7 +77,7 @@ _app = (function(parent) {
 						resolve(this.value);
 						this.disabled = true;
 						this.blur();
-						if(isIOS())
+						if(infra.isIOS())
 							ovl.removeEventListener('touchstart', focusIOS);
 					}
 				});
@@ -84,7 +85,7 @@ _app = (function(parent) {
 					if(!this.disabled)
 						this.focus();
 				});
-				if(isIOS())
+				if(infra.isIOS())
 					ovl.addEventListener('touchstart', focusIOS);
 			});
 		}

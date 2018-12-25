@@ -9,7 +9,7 @@ infra = {
 
 		if(typeof target.style.touchAction != 'undefined')
 			target.style.touchAction = 'none';
-		target.oncontextmenu = function(e) { return false; }
+		target.oncontextmenu = (e)=>{ return false; }
 
 		this.normalizeEvents.pointerDown=[];
 		if(window.PointerEvent)
@@ -138,5 +138,6 @@ infra = {
 				this.stroke();
 		}
 		return dc;
-	}
+	},
+	isIOS: function() { return /ipad|iphone|ipod/i.test(navigator.userAgent.toLowerCase()); }
 };

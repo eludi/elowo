@@ -1,4 +1,4 @@
-const version = '018';
+const version = '023';
 const cacheWhitelist = ['static_'+version, 'app'];
 
 this.addEventListener('install', (event)=>{
@@ -57,11 +57,16 @@ this.addEventListener('activate', (event)=>{
 
 this.addEventListener('fetch', (event)=>{
 	event.respondWith(
-		caches.match(event.request).then((response)=>{
+		caches.match(event.request).then((response)=>{ // cache falling back to network
 			if (event.request.cache === 'only-if-cached' && event.request.mode !== 'same-origin')
 				return;
 			return response || fetch(event.request);
 		})
+		/*
+		fetch(event.request).catch(()=>{ // network falling back to cache
+			return caches.match(event.request);
+		})
+		*/
 	);
 });
 
