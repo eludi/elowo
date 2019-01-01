@@ -63,7 +63,7 @@ ide.editor = {
 		if(this.currentIndent)
 			setTimeout(()=>{
 				this.insertAtCursor(this.textarea, this.currentIndent);
-			}, infra.isIOS() ? 10 : 0);
+			}, infra.isIOS() ? 25 : 0);
 	},
 
 	init: function(title) {

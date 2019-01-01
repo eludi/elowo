@@ -95,7 +95,7 @@ fileUtils.loadjs(['lib/jszip.min.js', 'lib/base64.min.js'], true, ()=>{
 		});
 		let icon = resources.get(metadata.icon);
 		if(icon) {
-			const iconSizes = [ 32, 144, 152, 180, 256, 512 ];
+			const iconSizes = [ 32, 144, 152, 180, 192, 256, 512 ];
 			for(let i=0; i<iconSizes.length; ++i) {
 				let sz = iconSizes[i];
 				let data = svg2png(icon, sz, sz);
