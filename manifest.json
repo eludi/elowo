@@ -1,7 +1,7 @@
 {
 	"short_name": "elowo",
 	"name": "elowo",
-	"description": "a modern reincarnation of the home computer in your browser... and in your pocket!",
+	"description": "the friendly home computer in your browser... and in your pocket! Instantly create web apps, mobile apps, and desktop apps on any device, just using JavaScript.",
 	"icons": [
 		{
 			"src": "icon32.png",
@@ -43,6 +43,6 @@
 	"scope": "./",
 	"display": "fullscreen",
 	"orientation": "any",
-	"background_color": "#ccc",
+	"background_color": "#68c",
 	"theme_color": "#68c"
 }

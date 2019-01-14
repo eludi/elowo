@@ -28,6 +28,38 @@
   a suggestion how to fix them. In the meanwhile please try a different browser such as Firefox or
   Chrome.
 
+#### Is elowo a retro computing project?
+
+- No. We use the term "home computer" in our profile to capture certain essential qualities that
+  elowo shares with home computers such as the Commodore C64 or Amstrad CPC:
+  Immediate programmability and beginner friendliness.
+
+- On a technical level, elowo is not retro at all but very modern, using many modern web
+  technologies such as service workers or the caching API. Furthermore, elowo addresses the challenges of current frontend software development such as
+  - support of heterogeneous platforms / various operating systems,
+  - a presentation that supports a wide range of device formats,
+  - resolution independent crisp canvas-based vector graphics, and
+  - multi-modal pointer input (mouse, touch, stylus).
+ 
+### How does elowo compare to [electron.js](https://electronjs.org/)?
+
+- Both elowo and electron allow you to develop platform independent apps based on web technologies
+  with Javascript as core language. Whereas the electron framework is a comprehensive runtime
+  environment for professional-grade standalone desktop application development, elowo is a much more lightweight browser app that focuses on beginner-friendly personal coding. Furthermore. elowo
+  provides a built-in basic code editor and even allows you to write and run code on smartphones and
+  tablets. 
+
+#### Shouldn't a beginner rather start with learning Python?
+
+- Python is a versatile and beginner-friendly programing language that is definitely a good choice
+  when starting with learning to code. Yet it has some weaknesses regarding its multimedia capabilities and requires expert-grade knowledge when a project nears its completion
+  and shall be shared with others: It is non-trivial to package a python app in such a way that a
+  non-technical user can execute it on her computer without installing a development environment
+  first. Second, Python primarily addresses classic desktop operating systems (Windows, macOS, Linux),
+  whereas the nowadays more widespread mobile platforms Android and iOS are at best afterthoughts.
+  Both fundamental issues do not exist for elowo or the web as platform in general, and contemporary 
+  JavaScript is a mature and approachable programming language as well.
+
 #### What does elowo mean?
 
   - The name is a fictive Pidgin derivation from elowo < *helloworld. This is the classic name

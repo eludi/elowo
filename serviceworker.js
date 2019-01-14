@@ -1,4 +1,4 @@
-const version = '025';
+const version = '030';
 const cacheWhitelist = ['static_'+version, 'app'];
 
 this.addEventListener('install', (event)=>{

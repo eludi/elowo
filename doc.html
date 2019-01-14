@@ -61,25 +61,43 @@ body::after {
 	margin:0.25em 0;
 }
 
+button {
+	display:flex;
+	align-items: center;
+	border:none;
+	padding:0;
+	color:white;
+	background:#68c;
+	opacity:0.5;
+	font-weight: bold;
+	z-index: 999;
+}
+button:hover {
+	opacity:1;
+	cursor: pointer;
+}
+button > svg {
+	width:24px;
+	height:24px;
+	margin:4px;
+}
 #btn_back {
 	position:fixed;
 	top:8px;
 	left:8px;
 	width:32px;
 	height:32px;
-	z-index: 999;
-	border:none;
-	padding:0;
-	background:#68c;
-	opacity:0.5;
 }
-#btn_back:hover {
+#btn_run {
+	float:right;
+	background:#777;
+	padding-right: 1em;
+	border-radius: 0.5em;
 	opacity:1;
+	font-size: 100%;
 }
-button > svg {
-	width:24px;
-	height:24px;
-	margin:4px;
+#btn_run:hover {
+	background:#444;
 }
 
 header {
@@ -99,6 +117,9 @@ header p {
 	font-weight: 200;
 	font-size: 150%;
 }
+header p:last-of-type {
+	margin-bottom: 0;
+}
 header img {
 	width:256px;
 	float: right;
@@ -108,6 +129,9 @@ header img {
 main {
 	margin: 0 auto 2em;
 	max-width: 960px;
+}
+main h2 {
+	margin-top:0.5em;
 }
 
 footer {
@@ -168,7 +192,7 @@ function showPage(page) {
 	});
 }
 document.addEventListener("DOMContentLoaded", ()=>{
-	document.querySelector('header img').addEventListener('click', ()=>{ location.href = './'; });
+	document.querySelector('#btn_run').addEventListener('click', ()=>{ location.href = './'; });
 	if(location.hash)
 		showPage(location.hash.substr(location.hash.indexOf('#')+1));
 });
@@ -189,7 +213,11 @@ window.addEventListener("hashchange", (evt)=>{
 				<img src="doc/happy_devices.svg" title="go to editor"/>
 				<h1>elowo</h1>
 				<p>Welcome to the friendly home computer in your browser&hellip; and in your pocket!</p>
-				<p>Easily create web apps, mobile apps, and desktop apps on any device, just using JavaScript!</p>
+				<p>Easily create web apps, mobile apps, and desktop apps on any device, just using JavaScript.</p>
+				<button id="btn_run"
+					><svg style="fill:white;" viewbox="0 0 24 24"><path d="M 19.924706,7.3694118 12.639764,14.65353 C 12.255176,14.018589 11.780823,13.394353 11.200235,12.817883 10.613881,12.234 9.9797637,11.757176 9.3316465,11.373412 L 16.630588,4.075294 c 0.66953,0.3154118 1.334941,0.7609412 1.933647,1.3596472 0.600353,0.5995294 1.045059,1.2649412 1.360471,1.9344706 z M 11.294117,16 H 8.0000003 v -3.294117 l 0.3952935,-0.395295 c 0.6695287,0.317059 1.3349409,0.762589 1.9336472,1.360471 0.599529,0.600353 1.044235,1.264118 1.36047,1.933647 z M 20.875883,6.4190589 C 20.491294,5.7832941 20.016941,5.1607058 19.436353,4.5834117 18.849177,4.0003528 18.215882,3.5227058 17.567765,3.138941 l 1.138117,-1.1389412 c 0,0 1.647059,0 2.470589,0.8235294 C 22,3.6470587 22,5.2941176 22,5.2941176 Z M 3.9999996,2 C 2.9069375,2 1.9999998,2.9069372 1.9999998,4 v 16 c 0,1.093063 0.9069377,2 1.9999998,2 H 20 c 1.093063,0 2,-0.906937 2,-2 V 7.6582031 L 20,9.65625 V 20 H 3.9999996 V 6 H 12.34375 l 3.998047,-4 z"></path></svg>
+				go to editor
+			</button>
 			</div>
 		</header>
 		<main>
@@ -207,7 +235,7 @@ window.addEventListener("hashchange", (evt)=>{
 			</article><article class="doc">
 				<h2>Documentation</h2>
 				<ul>
-					<li><a href="#api">API reference</a> - keep this under your pillow</li>
+					<li><a href="#api">API reference</a> - all the interesting details</li>
 					<li><a href="#story">background story</a> - why elowo</li>
 					<li><a href="#publishing">publishing guide</a> - share your app with the world</li>
 					<li><a href="#faq">FAQ</a> - frequently asked questions</li>
