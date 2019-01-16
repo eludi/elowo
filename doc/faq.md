@@ -45,7 +45,7 @@
 
 - Both elowo and electron allow you to develop platform independent apps based on web technologies
   with Javascript as core language. Whereas the electron framework is a comprehensive runtime
-  environment for professional-grade standalone desktop application development, elowo is a much more lightweight browser app that focuses on beginner-friendly personal coding. Furthermore. elowo
+  environment for professional-grade standalone desktop application development, elowo is a much more lightweight browser app that focuses on beginner-friendly personal coding. Furthermore, elowo
   provides a built-in basic code editor and even allows you to write and run code on smartphones and
   tablets. 
 
@@ -58,9 +58,9 @@
   first. Second, Python primarily addresses classic desktop operating systems (Windows, macOS, Linux),
   whereas the nowadays more widespread mobile platforms Android and iOS are at best afterthoughts.
   Both fundamental issues do not exist for elowo or the web as platform in general, and contemporary 
-  JavaScript is a mature and approachable programming language as well.
+  JavaScript is a mature and approachable programing language as well.
 
 #### What does elowo mean?
 
   - The name is a fictive Pidgin derivation from elowo < *helloworld. This is the classic name
-    of the introductory first textbook example when learning a new programming language.
+    of the introductory first textbook example when learning a new programing language.

@@ -59,12 +59,6 @@ ide.editor = {
 			input.selectionStart = input.selectionEnd = start + textToInsert.length;
 		}
 	},
-	handleEnterEvent: function() {
-		if(this.currentIndent)
-			setTimeout(()=>{
-				this.insertAtCursor(this.textarea, this.currentIndent);
-			}, infra.isIOS() ? 25 : 0);
-	},
 
 	init: function(title) {
 		for(let elems = document.querySelectorAll('button'), i=0, el; el=elems[i]; ++i)
@@ -96,9 +90,31 @@ ide.editor = {
 				document.querySelector('#editor_pos').innerHTML = 'Ln&nbsp;'+pos.y+'<br/>Col&nbsp;'+pos.x;
 			});
 		});
-		this.textarea.addEventListener('keypress', (evt)=>{
-			if(evt.key=='Enter')
-				this.handleEnterEvent();
+		this.textarea.addEventListener('keydown', (evt)=>{
+			let ta = this.textarea;
+			if(evt.key=='Enter') {
+				if(this.currentIndent)
+					setTimeout(()=>{
+						this.insertAtCursor(ta, this.currentIndent);
+					}, infra.isIOS() ? 25 : 0);
+			}
+			else if(evt.key=='Tab') {
+				evt.preventDefault();
+				let cursorX = this.getCursorPos(ta).x - 1;
+				let numSpaces = 4 - (cursorX % 4);
+				this.insertAtCursor(ta, ' '.repeat(numSpaces));
+			}
+			else if(evt.key=='Backspace') {
+				if (ta.selectionStart != ta.selectionEnd || ta.selectionStart===0)
+					return;
+				let cursorX = this.getCursorPos(ta).x - 1;
+				let newPos = ta.selectionStart - Math.min((cursorX % 4) || 4, cursorX);
+				for(--ta.selectionStart ; ta.selectionStart>newPos; --ta.selectionStart)
+					if(ta.value.charAt(ta.selectionStart)!=' ')
+						break;
+				if(ta.value.charAt(ta.selectionStart)!=' ')
+					++ta.selectionStart;
+			}
 		});
 	}
 };
@@ -239,7 +255,7 @@ ide.cacheApplet = async function(main) {
 	let cmd = '_app.currentApplet = '+JSON.stringify(fileUtils.baseName(this.currentApplet))+';\n';
 	cmd += '_app.resources.reset('+JSON.stringify(this.resources.serialize())+');\n\n';
 	let cacheData = addCacheEntry('data.js', cmd);
-	return [ await cacheMain, await cacheData ]; 
+	return [ await cacheMain, await cacheData ];
 }
 ide.newApplet = function() {
 	let newAppletName = (prefix)=>{
@@ -356,7 +372,7 @@ ide.visualizeApplets = function(data) {
 
 		let h = center.appendChild(document.createElement('h3'));
 		btnDelete.value = li.dataset.name = h.innerText = name;
-		
+
 		let content = data[name].main;
 		let preview = center.appendChild(document.createElement('code'));
 		preview.innerText = content.substr(0, content.indexOf('\n', 0));

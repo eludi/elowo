@@ -1,4 +1,4 @@
-const version = '030';
+const version = '033';
 const cacheWhitelist = ['static_'+version, 'app'];
 
 this.addEventListener('install', (event)=>{
@@ -13,6 +13,13 @@ this.addEventListener('install', (event)=>{
 			'./templates/index.html',
 			'./templates/manifest.json',
 			'./templates/serviceworker.js',
+			'./applets/test_console.js',
+			'./applets/test_canvas.js',
+			'./applets/test_resources.json',
+			'./applets/layers_test.json',
+			'./applets/pocket%20piano.js',
+			'./applets/zoom_test.js',
+			'./applets/env_test.js',
 			'./app.js',
 			'./doc.html',
 			'./doc/api.md',

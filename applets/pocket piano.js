@@ -32,7 +32,7 @@ function Polyphonium(oscillator='triangle') {
     }
     this.stop = function(id) {
         let v = this.voices[id];
-        if(v === null)
+        if(!v)
             return;
         v.gain.gain.linearRampToValueAtTime(0.0, ctx.currentTime + 0.25);
         setTimeout(()=>{
@@ -52,8 +52,8 @@ let pointers = [];
 
 function PianoBoard() {
     let hotspots = [];
-    this.addKey = function(x0,y0,x1,y1, freq) {
-        hotspots.push([x0,y0,x1,y1,freq,0]);
+    this.addKey = function(x0,y0,x1,y1, freq, label) {
+        hotspots.push([x0,y0,x1,y1,freq,0,label]);
     }
     this.hitsKey = function(x,y) {
         for(let i=0; i<hotspots.length; ++i) {
@@ -85,6 +85,10 @@ function PianoBoard() {
             let h = hotspots[i];
             ctx.fillStyle = h[5] ? '#888' : '#ccc';
             ctx.fillRect(h[0]+1,h[1]+1,h[2]-h[0]-2,h[3]-h[1]-2);
+            if(h[6]) { // label
+                ctx.fillStyle = '#000';
+                ctx.fillText(h[6], (h[0]+h[2])/2, (h[1]+h[3])/2);
+            }
         }
     }
 }
@@ -92,6 +96,9 @@ function PianoBoard() {
 function redraw() {
     let ctx = app.getCanvasContext();
     ctx.clearRect(0,0,app.width,app.height);
+    ctx.font = '20px sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
     pianoBoard.draw(ctx);
 }
 
@@ -101,15 +108,20 @@ app.addEventListener('resize', (width, height)=>{
     pianoBoard = new PianoBoard();
     for(let i=0; i<=12; ++i) {
         let freq = Math.round(220 * Math.pow(2, i/12));
-        let x = keyW*Math.floor(i/2);
+        let l = Math.floor(i/2), sharp = '';
+        let x = keyW*l;
         let y = keyH*3;
         if(i%12 == 1 || i%12 == 3 || i%12==6 || i%12==8 || i%12==10) {
             x += keyW/2;
             y -= keyH;
+            sharp = '#';
         }
-        else if(i>4)
+        else if(i>4) {
+            ++l;
             x += keyW;
-        pianoBoard.addKey(x,y, x+keyW,y+keyH, freq);
+        }
+        let label = String.fromCharCode('A'.charCodeAt(0) + (l+2)%7) + sharp;
+        pianoBoard.addKey(x,y, x+keyW,y+keyH, freq, label);
     }
     redraw();
 });
