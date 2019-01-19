@@ -66,7 +66,7 @@ fileUtils = {
 		let type = this.fileType(file);
 		if(typeof type != 'string')
 			return true;
-		return (type.startsWith('text/') || type.endsWith('/json') || type.endsWith('/javascript')) ?
+		return (type.startsWith('text/') || type.endsWith('/json') || type.endsWith('javascript')) ?
 			false : true;
 	},
 	baseName(name) {

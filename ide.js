@@ -253,7 +253,12 @@ ide.cacheApplet = async function(main) {
 
 	let cacheMain = addCacheEntry('main.js', 'async function main(app, console) { '+main+'\n}\n');
 	let cmd = '_app.currentApplet = '+JSON.stringify(fileUtils.baseName(this.currentApplet))+';\n';
-	cmd += '_app.resources.reset('+JSON.stringify(this.resources.serialize())+');\n\n';
+	cmd += '_app.resources.reset('+JSON.stringify(this.resources.serialize(/.*javascript$/, true))+');\n\n';
+
+	let scripts = this.resources.serialize(/.*javascript$/, false);
+	for(let key in scripts)
+		cmd += '//-- '+key+' --\n'+ scripts[key].resource+'\n';
+
 	let cacheData = addCacheEntry('data.js', cmd);
 	return [ await cacheMain, await cacheData ];
 }

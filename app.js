@@ -48,9 +48,12 @@ window._app = {
 			}
 			return null;
 		},
-		serialize: function() {
+		serialize: function(mimePattern = /.*/, negate=false) {
 			let data = {};
-			this.data.forEach((item, id)=>{ data[id] = item.url ? item.url : item; });
+			this.data.forEach((item, id)=>{
+				if(negate ? !item.mime.match(mimePattern) : item.mime.match(mimePattern))
+					data[id] = item.url ? item.url : item;
+			});
 			return data;
 		},
 		visualize: function(name, item) {

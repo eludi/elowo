@@ -1,4 +1,4 @@
-const version = '033';
+const version = '035';
 const cacheWhitelist = ['static_'+version, 'app'];
 
 this.addEventListener('install', (event)=>{
@@ -20,7 +20,6 @@ this.addEventListener('install', (event)=>{
 			'./applets/pocket%20piano.js',
 			'./applets/zoom_test.js',
 			'./applets/env_test.js',
-			'./app.js',
 			'./doc.html',
 			'./doc/api.md',
 			'./doc/happy_devices.svg',
@@ -30,22 +29,23 @@ this.addEventListener('install', (event)=>{
 			'./doc/privacy.md',
 			'./doc/publishing.md',
 			'./doc/story.md',
-			'./fileUtils.js',
 			'./icon32.png',
 			'./icon144.png',
 			'./icon152.png',
 			'./icon180.png',
 			'./icon192.png',
 			'./icon256.png',
-			'./icon512.png',
+			'./icon512.png'/**/,
+			'./',
+			'./app.js',
+			'./fileUtils.js',
 			'./ide.js',
 			'./index.html',
-			'./',
 			'./infra.js',
 			'./manifest.json',
 			'./packager.js',
 			'./run.html',
-			'./runtime.js'
+			'./runtime.js'/**/
 		]);
 	}));
 });
