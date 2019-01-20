@@ -47,6 +47,10 @@ fileUtils = {
 			return 'text/plain';
 		case 'html':
 			return 'text/html';
+		case 'woff':
+			return 'font/woff';
+		case 'woff2':
+			return 'font/woff2';
 		}
 		console.warn('unknown file type', suffix);
 	},

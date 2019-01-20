@@ -4,13 +4,17 @@ window._app = {
 		data: new Map(),
 		import: function(file, visualize) {
 			let isBinary = fileUtils.isBinary(file);
-			if(isBinary && file.type.indexOf("audio/")!=0 && file.type.indexOf("image/")!=0)
+			let ftype = fileUtils.fileType(file);
+			if(isBinary && !ftype.startsWith("audio/") && !ftype.startsWith("image/")
+				&& !ftype.startsWith("font/"))
+			{
 				return _app.error("invalid resource type "+file.type);
+			}
 
 			let reader  = new FileReader();
 			reader.addEventListener("load", ()=>{
 				isBinary ? this.add(file.name, reader.result, visualize) :
-					this.add(file.name, { resource:reader.result, mime:file.type }, visualize);
+					this.add(file.name, { resource:reader.result, mime:ftype }, visualize);
 			}, false);
 			if(isBinary)
 				reader.readAsDataURL(file);
@@ -34,12 +38,23 @@ window._app = {
 		},
 		instantiate(name, dataUrl) {
 			let obj = null;
+			if(name.toLowerCase().endsWith('woff2') && !dataUrl.startsWith('data:font/woff2'))
+				dataUrl = 'data:font/woff2' + dataUrl.substr(dataUrl.indexOf(';'));
 			let mime = this.getMime(dataUrl);
-			if(mime.indexOf("audio/")==0)
+			if(mime.startsWith("audio/"))
 				obj = new Audio(dataUrl);
-			else if(mime.indexOf("image/")==0) {
+			else if(mime.startsWith("image/")) {
 				obj = new Image();
 				obj.src = dataUrl;
+			}
+			else if(mime.startsWith('font/')) {
+				let fontName = name.substr(0, name.indexOf('.'));
+				fontName = fontName.toLowerCase().split('-')
+					.map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+				obj = new FontFace(fontName, 'url('+dataUrl+')');
+				obj.load().then((loadedFace)=>{ document.fonts.add(loadedFace); }).catch(err=>{
+					_app.error("loading font resource", name, "failed:", err);
+				});
 			}
 			if(obj) {
 				obj.title = name;
@@ -119,7 +134,9 @@ window._app = {
 		},
 		get: function(name) {
 			let item = this.data.get(name);
-			return item ? item.resource : null;
+			if(!item)
+				return null;
+			return item.mime.endsWith('json') ? JSON.parse(item.resource) : item.resource;
 		},
 		getMime(dataUrl) { 
 			let mime = dataUrl.substring(5, dataUrl.indexOf(',', 5));
