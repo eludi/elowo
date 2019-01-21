@@ -1,4 +1,4 @@
-const version = '037';
+const version = '038';
 const cacheWhitelist = ['static_'+version, 'app'];
 
 this.addEventListener('install', (event)=>{
@@ -22,12 +22,16 @@ this.addEventListener('install', (event)=>{
 			'./applets/env_test.js',
 			'./doc.html',
 			'./doc/api.md',
+			'./doc/export.svg',
 			'./doc/happy_devices.svg',
+			'./doc/import.svg',
 			'./doc/faq.md',
 			'./doc/legal.md',
 			'./doc/license.md',
 			'./doc/privacy.md',
 			'./doc/publishing.md',
+			'./doc/resources.md',
+			'./doc/resources.svg',
 			'./doc/story.md',
 			'./icon32.png',
 			'./icon144.png',
