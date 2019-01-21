@@ -35,8 +35,11 @@ fileUtils = {
 	fileType(file) {
 		if(typeof file == 'string')
 			file = { name:file };
-		if(file.type)
+		if(file.type) {
+			if(file.type.indexOf(';')>=0)
+				return file.type.substring(0, file.type.indexOf(';'));
 			return file.type;
+		}
 		let suffix = file.name.substr(file.name.lastIndexOf('.')+1).toLowerCase();
 		switch(suffix) {
 		case 'json':
