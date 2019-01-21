@@ -48,6 +48,8 @@ window._app = {
 				obj.src = dataUrl;
 			}
 			else if(mime.startsWith('font/')) {
+				if(!('FontFace' in window))
+					return _app.error('browser does not support FontFace API');
 				let fontName = name.substr(0, name.indexOf('.'));
 				fontName = fontName.toLowerCase().split('-')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
@@ -200,7 +202,7 @@ window._app = {
 			el.style.display = (el.id!=id) ? 'none' : (i==0) ? '' : 'block';
 		return true;
 	},
-	error(msg) { this.log(msg,'Crimson'); this.setScreen('output'); },
+	error(msg) { this.log(msg,'Crimson'); this.setScreen('editor'); },
 	log(msg, color) {
 		let cons = document.querySelector('#console');
 		if(color) {

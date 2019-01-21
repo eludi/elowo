@@ -56,6 +56,7 @@ fileUtils = {
 			return 'font/woff2';
 		}
 		console.warn('unknown file type', suffix);
+		return '';
 	},
 	suffix(mime) {
 		switch(mime) {
