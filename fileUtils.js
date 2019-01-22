@@ -50,6 +50,10 @@ fileUtils = {
 			return 'text/plain';
 		case 'html':
 			return 'text/html';
+		case 'md':
+			return 'text/markdown';
+		case 'css':
+			return 'text/css';
 		case 'woff':
 			return 'font/woff';
 		case 'woff2':
@@ -64,6 +68,8 @@ fileUtils = {
 			return 'js';
 		case 'text/plain':
 			return 'txt';
+		case 'text/markdown':
+			return 'md';
 		case 'image/svg+xml':
 			return 'svg';
 		default:
