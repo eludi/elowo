@@ -29,6 +29,11 @@ window._app = {
 				item.url = item.resource;
 				item.resource = (new DOMParser()).parseFromString(item.url, data.mime);
 			}
+			if(item.url && !item.resource) {
+				let instance = this.instantiate(name, item.url);
+				item.mime = instance.mime;
+				item.resource = instance.resource;
+			}
 			if(item) {
 				this.data.set(name, item);
 				if(visualize)
@@ -68,8 +73,17 @@ window._app = {
 		serialize: function(mimePattern = /.*/, negate=false) {
 			let data = {};
 			this.data.forEach((item, id)=>{
-				if(negate ? !item.mime.match(mimePattern) : item.mime.match(mimePattern))
-					data[id] = item.url ? item.url : item;
+				if(negate ? item.mime.match(mimePattern) : !item.mime.match(mimePattern))
+					return;
+				let record = {};
+				if(item.url) {
+					record.url = item.url;
+					if(item.terms)
+						record.terms = item.terms;
+				}
+				else for(let key in item)
+					record[key] = item[key];
+				data[id] = record;
 			});
 			return data;
 		},
@@ -96,13 +110,39 @@ window._app = {
 				center.appendChild(item.resource).controls = true;
 			}
 
-			let btnDelete = right.appendChild(document.createElement('button'));
-			btnDelete.innerHTML = document.querySelector('#btn_delete').innerHTML;
-			btnDelete.value = name;
-			btnDelete.addEventListener('click', (evt)=>{
+			const createButtonFromTemplate = function(selector, value, onclick) {
+				let template = document.querySelector(selector);
+				let button = document.createElement('button');
+				button.innerHTML = template.innerHTML;
+				button.value = value;
+				button.title = template.title;
+				button.addEventListener('click', onclick);
+				return button;
+			}
+
+			if(!fileUtils.isBinary({name:name, type:item.mime})) {
+				right.appendChild(createButtonFromTemplate('#btn_edit', name, ()=>{
+					_app.screenStack.push('resources');
+					let title = 'resources > '+name;
+					_app.openAuxEditor('resources > '+name, item.resource, (data)=>{
+						item.resource = data;
+					});
+				}));
+			}
+			right.appendChild(createButtonFromTemplate('#btn_terms_of_use', name, ()=>{
+				_app.screenStack.push('resources');
+				let title = 'resources > '+name+' > terms of use';
+				_app.openAuxEditor(title, item.terms || '', (terms)=>{
+					if(terms)
+						item.terms = terms;
+					else
+						delete item.terms;
+				});
+			}));
+			right.appendChild(createButtonFromTemplate('#btn_delete', name, (evt)=>{
 				if(window.confirm('Delete '+name+'?'))
 					this.remove(evt.currentTarget.value);
-			});
+			}));
 		},
 		empty: function() {
 			return this.data.size == 0;
@@ -133,6 +173,15 @@ window._app = {
 			for(let item=ul.firstChild; item!==null; item=item.nextSibling)
 				if(item.dataset.name == name)
 					return ul.removeChild(item);
+		},
+		create: function(mime) {
+			let i=1, name='';
+			do {
+				name = 'resource'+i+'.'+fileUtils.suffix(mime);
+				++i;
+			} while(this.data.has(name));
+			this.add(name, { resource:'', mime:mime }, true);
+			return name;
 		},
 		get: function(name) {
 			let item = this.data.get(name);
@@ -199,7 +248,8 @@ window._app = {
 		if(!document.getElementById(id))
 			return false;
 		for(let elems = document.querySelectorAll('body > div'), i=0, el; el=elems[i]; ++i)
-			el.style.display = (el.id!=id) ? 'none' : (i==0) ? '' : 'block';
+			el.style.display = (el.id!=id) ? 'none' :
+				name.toLowerCase().endsWith('editor') ? 'flex' : 'block';
 		return true;
 	},
 	error(msg) { this.log(msg,'Crimson'); this.setScreen('editor'); },

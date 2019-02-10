@@ -31,6 +31,10 @@ fileUtils.loadjs(['lib/jszip.min.js', 'lib/base64.min.js'], true, ()=>{
 					data = base64js.toByteArray(data);
 			}
 			zip.file(fname, data);
+			if(item.terms) {
+				let fname = fileUtils.baseName(id)+'.license.txt';
+				zip.file(fname, item.terms);
+			}
 		});
 		zip.generateAsync({type:"blob"}).then((blob)=>{
 			saveAs(blob, zipName, blob.type);

@@ -5,12 +5,14 @@ ide.applets = {};
 ide.tStart = null;
 ide.installEvt = null;
 ide.installationRejected = false;
+ide.editor = null;
+ide.auxEditor = null;
+ide.sidebar = null;
+ide.screenStack = [];
 
-ide.editor = {
-	currentIndent: '',
-	textarea: null,
+const Editor = function(screen, title, content='') {
 
-	replaceSmartPunctuation: function(str) {
+	this.replaceSmartPunctuation = function(str) {
 		const convMap = {
 			// Open-quotes: http://www.fileformat.info/info/unicode/category/Pi/list.htm
 			0x2018:'\'', 0x201B:'\'', 0x201C:'"', 0x201F:'"', "‚": "'", "„": '"',
@@ -23,16 +25,15 @@ ide.editor = {
 		for(const key in convMap)
 			str = str.replace(new RegExp(key, 'g'), convMap[key]);
 		return str;
-	},
-	getContent: function() {
+	}
+	this.getContent = function() {
 		return this.replaceSmartPunctuation(this.textarea.value);
-	},
-	reset: function(name, content='') {
-		document.querySelector('#editor_title').value = name;
+	}
+	this.reset = function(name, content='') {
+		screen.querySelector('.editor_title').value = name;
 		this.textarea.value = content;
-		document.querySelector('#editor_sidebar').className = 'closed';
-	},
-	getCursorPos: function(textarea) {
+	}
+	this.getCursorPos = function(textarea) {
 		let lines = textarea.value.substr(0, textarea.selectionStart).split("\n");
 		let pos = { x:lines[lines.length-1].length+1, y:lines.length };
 		let currLine = lines[pos.y-1];
@@ -40,16 +41,16 @@ ide.editor = {
 			currLine = lines[pos.y-2];
 		this.currentIndent = currLine.substr(0, currLine.search(/\S/));
 		return pos;
-	},
-	getState() {
+	}
+	this.getState = function() {
 		return { selectionStart:this.textarea.selectionStart, scrollTop:this.textarea.scrollTop };
-	},
-	setState(state) {
+	}
+	this.setState = function(state) {
 		this.textarea.selectionStart = state.selectionStart;
 		this.textarea.selectionEnd = state.selectionStart;
 		this.textarea.scrollTop = state.scrollTop;
-	},
-	insertAtCursor: function(input, textToInsert) {
+	}
+	this.insertAtCursor = function(input, textToInsert) {
 		const isSuccess = document.execCommand("insertText", false, textToInsert);
 		// Firefox (non-standard method)
 		if (!isSuccess && typeof input.setRangeText === "function") {
@@ -58,65 +59,44 @@ ide.editor = {
 			// update cursor to be at the end of insertion
 			input.selectionStart = input.selectionEnd = start + textToInsert.length;
 		}
-	},
-
-	init: function(title) {
-		for(let elems = document.querySelectorAll('button'), i=0, el; el=elems[i]; ++i)
-			if(el.value)
-				el.addEventListener('click', (evt)=>{
-					ide.handleUIEvent(evt.currentTarget.value.split(/\s+/)); });
-
-		document.querySelector('#loadFS').addEventListener('change', function(e) {
-			for(let i=0; i<this.files.length; ++i) {
-				let file = this.files[i];
-				let reader = new FileReader();
-				reader.addEventListener("load", function(e) { ide.importApplet(file, this.result); });
-				reader.readAsText(file);
-			}
-		});
-		document.querySelector('#importRes').addEventListener('change', function(e) {
-			for(let i=0; i<this.files.length; ++i)
-				ide.resources.import(this.files[i], true);
-		});
-
-		let editorTitle = document.querySelector('#editor_title');
-		editorTitle.value = title;
-		editorTitle.addEventListener('change', function(e) { ide.renameApplet(this.value); });
-
-		this.textarea = document.querySelector('#editor');
-		[ 'input', 'keydown', 'keyup', 'click', 'focus' ].forEach((evtName)=>{
-			this.textarea.addEventListener(evtName, (e)=>{
-				let pos = this.getCursorPos(this.textarea);
-				document.querySelector('#editor_pos').innerHTML = 'Ln&nbsp;'+pos.y+'<br/>Col&nbsp;'+pos.x;
-			});
-		});
-		this.textarea.addEventListener('keydown', (evt)=>{
-			let ta = this.textarea;
-			if(evt.key=='Enter') {
-				if(this.currentIndent)
-					setTimeout(()=>{
-						this.insertAtCursor(ta, this.currentIndent);
-					}, infra.isIOS() ? 25 : 0);
-			}
-			else if(evt.key=='Tab') {
-				evt.preventDefault();
-				let cursorX = this.getCursorPos(ta).x - 1;
-				let numSpaces = 4 - (cursorX % 4);
-				this.insertAtCursor(ta, ' '.repeat(numSpaces));
-			}
-			else if(evt.key=='Backspace') {
-				if (ta.selectionStart != ta.selectionEnd || ta.selectionStart===0)
-					return;
-				let cursorX = this.getCursorPos(ta).x - 1;
-				let newPos = ta.selectionStart - Math.min((cursorX % 4) || 4, cursorX);
-				for(--ta.selectionStart ; ta.selectionStart>newPos; --ta.selectionStart)
-					if(ta.value.charAt(ta.selectionStart)!=' ')
-						break;
-				if(ta.value.charAt(ta.selectionStart)!=' ')
-					++ta.selectionStart;
-			}
-		});
 	}
+
+	this.currentIndent = '';
+	this.textarea = screen.querySelector('textarea');
+	[ 'input', 'keydown', 'keyup', 'click', 'focus' ].forEach((evtName)=>{
+		this.textarea.addEventListener(evtName, (e)=>{
+			let pos = this.getCursorPos(this.textarea);
+			screen.querySelector('.editor_pos').innerHTML = 'Ln&nbsp;'+pos.y+'<br/>Col&nbsp;'+pos.x;
+		});
+	});
+	this.textarea.addEventListener('keydown', (evt)=>{
+		let ta = this.textarea;
+		if(evt.key=='Enter') {
+			if(this.currentIndent)
+				setTimeout(()=>{
+					this.insertAtCursor(ta, this.currentIndent);
+				}, infra.isIOS() ? 25 : 0);
+		}
+		else if(evt.key=='Tab') {
+			evt.preventDefault();
+			let cursorX = this.getCursorPos(ta).x - 1;
+			let numSpaces = 4 - (cursorX % 4);
+			this.insertAtCursor(ta, ' '.repeat(numSpaces));
+		}
+		else if(evt.key=='Backspace') {
+			if (ta.selectionStart != ta.selectionEnd || ta.selectionStart===0)
+				return;
+			let cursorX = this.getCursorPos(ta).x - 1;
+			let newPos = ta.selectionStart - Math.min((cursorX % 4) || 4, cursorX);
+			for(--ta.selectionStart ; ta.selectionStart>newPos; --ta.selectionStart)
+				if(ta.value.charAt(ta.selectionStart)!=' ')
+					break;
+			if(ta.value.charAt(ta.selectionStart)!=' ')
+				++ta.selectionStart;
+		}
+	});
+	screen.querySelector('.editor_title').value = title;
+	this.textarea.value = content;
 };
 
 ide.init = function() {
@@ -130,9 +110,38 @@ ide.init = function() {
 			evt.preventDefault();
 		});
 	}
-	this.editor.init(this.currentApplet);
+	this.sidebar = new (function(elem) {
+		this.close = function() { elem.className = 'closed'; }
+		this.toggle = function() {
+			elem.className = (elem.className=='closed') ? 'open' : 'closed';
+		}
+	})(document.querySelector('#editor_sidebar'));
+
+	this.editor = new Editor(document.querySelector('#screen_editor'), this.currentApplet);
 	this.applets_init();
 	this.metaInit();
+
+	for(let elems = document.querySelectorAll('button'), i=0, el; el=elems[i]; ++i)
+	if(el.value)
+		el.addEventListener('click', (evt)=>{
+			this.handleUIEvent(evt.currentTarget.value.split(/\s+/)); });
+
+	let editorTitle = document.querySelector('#screen_editor .editor_title');
+	editorTitle.addEventListener('change', function(e) { ide.renameApplet(this.value); });
+	
+	document.querySelector('#loadFS').addEventListener('change', function(e) {
+		for(let i=0; i<this.files.length; ++i) {
+			let file = this.files[i];
+			let reader = new FileReader();
+			reader.addEventListener("load", function(e) { ide.importApplet(file, this.result); });
+			reader.readAsText(file);
+		}
+	});
+	document.querySelector('#importRes').addEventListener('change', function(e) {
+		for(let i=0; i<this.files.length; ++i)
+			ide.resources.import(this.files[i], true);
+	});
+
 	this.tStart = new Date();
 
 	window.addEventListener("hashchange", (evt)=>{ this.autoRun(evt.newURL); }, false);
@@ -253,11 +262,25 @@ ide.cacheApplet = async function(main) {
 
 	let cacheMain = addCacheEntry('main.js', 'async function main(app, console) { '+main+'\n}\n');
 	let cmd = '_app.currentApplet = '+JSON.stringify(fileUtils.baseName(this.currentApplet))+';\n';
-	cmd += '_app.resources.reset('+JSON.stringify(this.resources.serialize(/.*javascript$/, true))+');\n\n';
+	let resources = this.resources.serialize(/.*javascript$/, true);
+	let terms = '';
+	for(let key in resources) {
+		if(!('terms' in resources[key]))
+			continue;
+		terms += '-- '+key+' TERMS OF USE --\n'+resources[key].terms+'\n';
+		delete resources[key].terms;
+	}
+	cmd += '_app.resources.reset('+JSON.stringify(resources)+');\n\n';
+	if(terms !== '')
+	cmd += '/*\n'+terms+'*/\n';
 
 	let scripts = this.resources.serialize(/.*javascript$/, false);
-	for(let key in scripts)
-		cmd += '//-- '+key+' --\n'+ scripts[key].resource+'\n';
+	for(let key in scripts) {
+		cmd += '//-- '+key+' --\n';
+		if(scripts[key].terms)
+			cmd += '/*\n'+scripts[key].terms+'\n*/\n';
+		cmd += scripts[key].resource+'\n';
+	}
 
 	let cacheData = addCacheEntry('data.js', cmd);
 	return [ await cacheMain, await cacheData ];
@@ -275,6 +298,7 @@ ide.newApplet = function() {
 	this.resources.reset();
 	this.editor.reset(this.currentApplet);
 	this.metaReset();
+	this.sidebar.close();
 	return '';
 };
 ide.openApplet = function(name, data) {
@@ -291,6 +315,7 @@ ide.openApplet = function(name, data) {
 	this.resources.reset(data.resources, true);
 	this.editor.reset(name, data.main);
 	this.metaReset(data.meta);
+	this.sidebar.close();
 	return data.main;
 };
 ide.importApplet = function(file, data) {
@@ -368,8 +393,10 @@ ide.visualizeApplets = function(data) {
 		center.className = 'center';
 		let right = li.appendChild(document.createElement('div'));
 
+		let template = document.querySelector('#btn_delete');
 		let btnDelete = right.appendChild(document.createElement('button'));
-		btnDelete.innerHTML = document.querySelector('#btn_delete').innerHTML;
+		btnDelete.innerHTML = template.innerHTML;
+		btnDelete.title = template.title;
 		btnDelete.addEventListener('click', (evt)=>{
 			if(window.confirm('Delete '+name+'?'))
 				this.removeApplet(evt.currentTarget.value);
@@ -422,9 +449,55 @@ ide.metaEmpty = function() {
 	return true;
 }
 
+ide.openAuxEditor = function(title, content, onclose) {
+	let editor = this.auxEditor = new Editor(
+		document.querySelector('#screen_auxEditor'), title, content);
+	if(onclose)
+		editor.onclose = onclose;
+	this.setScreen('auxEditor');
+}
+ide.closeAuxEditor = function() {
+	if(this.auxEditor) {
+		if(this.auxEditor.onclose)
+			this.auxEditor.onclose(this.auxEditor.getContent());
+		this.auxEditor = null;
+	}
+	this.setScreen(this.screenStack.pop() || 'editor');
+}
+ide.toggleOvl = function(id, open) {
+	let ovl = document.getElementById(id);
+	if(open===undefined)
+		ovl.classList.toggle('hidden');
+	else if(open)
+		ovl.classList.remove('hidden');
+	else
+		ovl.classList.add('hidden');
+	if(ovl.dataset.parent) {
+		let parent = document.getElementById(ovl.dataset.parent);
+		let svg = parent.querySelector('svg').style;
+		if(ovl.classList.contains('hidden')) {
+			svg.background = '';
+			svg.fill = 'white';
+		}
+		else {
+			svg.background = 'white';
+			svg.fill = '#57b';
+		}
+	}
+}
+ide.createResource = function(mime) {
+	this.resources.create(mime);
+	this.toggleOvl('ovl_createRes', false);
+}
+
 ide.handleUIEvent = function(args) {
-	if(args[0]=='screen')
+	if(args[0]=='screen') {
 		this.setScreen(args[1]);
+		for(let elems = document.querySelectorAll('.ide_ovl'), i=0, el; el=elems[i]; ++i)
+			this.toggleOvl(el.id, false);
+	}
+	else if(args[0]=='toggleOvl')
+		this.toggleOvl(args[1]);
 	else if(args[0]=='run')
 		this.run();
 	else if(args[0]=='new')
@@ -439,10 +512,8 @@ ide.handleUIEvent = function(args) {
 		this.compileApplet();
 	else if(args[0]=='exportRes')
 		this.packageResources(this.resources, fileUtils.baseName(this.currentApplet)+'.resources.zip');
-	else if(args[0]=='toggleMenu') {
-		let el = document.querySelector('#editor_sidebar');
-		el.className = (el.className=='closed') ? 'open' : 'closed';
-	}
+	else if(args[0]=='toggleMenu')
+		this.sidebar.toggle();
 	else if(args[0]=='doc')
 		location.href = 'doc.html#' + (args[1] ? args[1] : '');
 	else if(args[0]=='toggleConsole') {
@@ -451,6 +522,10 @@ ide.handleUIEvent = function(args) {
 		document.getElementById('btn_toggleConsole').style.transform =
 			(el.className=='console_big') ? 'scaleY(-1)' : 'scaleY(1)';
 	}
+	else if(args[0]=='createRes')
+		this.createResource(args[1]);
+	else if(args[0]=='closeAuxEditor')
+		this.closeAuxEditor();
 	else
 		this.log('"'+args.join(' ')+'" not yet implemented');
 
