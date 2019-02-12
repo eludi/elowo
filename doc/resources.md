@@ -12,15 +12,34 @@ Elowo supports the following resource formats:
 - TXT plain text files
 - JSON structured data
 - JavaScript libraries/code chunks
+- HTML snippets
+- CSS style sheets
 
 ## Resource management
 
 The resource management screen is opened via the following button in elowo's editor top bar:
+
 ![resources icon](doc/resources.svg)
 
 On this screen you find an overview on the currently defined resources. Furthermore, it allows you to 
 - ![import icon](doc/import.svg) import new resources from the local file system
 - ![export icon](doc/export.svg) export all resources as a zip archive to the local file system
+- ![create icon](doc/create.svg) create new text-based resources
+
+Text-based resources may be viewed and edited within elowo via the following icon:
+
+![edit icon](doc/edit.svg)
+
+## Resource terms of use
+
+The internet is full of freely usable resources. Many of them, however, require that their 
+original authors are properly attributed and thier licensing terms and conditions are distributed along them. Elowo facilitates this by allowing you to enter their terms of use via dedicated
+auxiliary text editor screens that are associated to each resource item and accessible via the
+terms icon:
+
+![terms icon](doc/legal.svg)
+
+On packaging the terms of use are included as comments in your app's source code.
 
 ## Resource access
 
