@@ -175,11 +175,6 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 	width: 32px;
 }
 
-.form {
-	width:100%;
-	height:calc(100% - 48px - 0.5em);
-	overflow-y: auto;
-}
 #files_list, #resources_list {
 	list-style: none;
 }
@@ -212,6 +207,12 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 	width:32px;
 	height:32px;
 }
+
+.form {
+	width:100%;
+	height:calc(100% - 48px - 0.5em);
+	overflow-y: auto;
+}
 .form input, .form select {
 	font-weight: bold;
 	font-size: 120%;
@@ -237,7 +238,7 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 	padding:0.5em;
 }
 
-#meta_middle, #createRes_middle {
+#meta_middle {
 	display: flex;
 	flex-direction: column;
 	box-sizing: border-box;
@@ -256,7 +257,6 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 .ide_ovl {
 	position: absolute;
 	top:40px;
-	right:0;
 	z-index:99;
 	background:rgba(255,255,255,0.75);
 	border-radius:12px;
@@ -272,7 +272,7 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 	font-size: 100%;
 	width:100%;
 	margin: 0.25em 0;
-	padding: 0.5em 0.25em;
+	padding: 0.5em 2em;
 	font-weight: bold;
 	color:white;
 	background: #57b;
@@ -281,11 +281,13 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 @media (max-width: 400px) {
 	.ide_ovl { width:100%; }
 }
+#ovl_createRes {
+	right:0;
+}
 @media (min-width: 401px) {
-	.ide_ovl {
-		width:320px;
-		right:40px;
-		border-top-right-radius: 0;
+	#ovl_transfer {
+		left: 160px;
+		width:240px;
 	}
 }
 		</style>
@@ -313,16 +315,25 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 					><ul class="sidebar"
 						><li><button value="new">new</button></li
 						><li><button value="open">open</button></li
-						><li><input type="file" id="loadFS" style="display:none;" multiple="multiple"/><label for="loadFS">import</label></li
+						><!--<li><button value="toggleOvl ovl_transfer" id="btn_transfer">transfer</button></li
+						>--><li><input type="file" id="loadFS" style="display:none;" multiple="multiple"/><label for="loadFS">import</label></li
 						><li><button value="saveFS">export</button></li
 						><li><button value="compile">package</button></li
 						><li><hr/></li
 						><li><button value="doc">documentation</button></li
 						><li><button value="doc legal">legal notices</button></li
 						><li><button value="doc privacy">privacy policy</button></li
-						><li>v1.20190210a</li
+						><li>v1.20190212</li
 					></ul
 				></nav
+				><div id="ovl_transfer" data-parent="btn_transfer" class="ide_ovl hidden"
+					><div>transfer</div
+					><ul
+						><li><button value="transfer send">send</button></li
+						><li><button value="transfer receive">receive</button></li
+						><li><button value="toggleOvl ovl_transfer">cancel</button></li
+					></ul
+				></div
 				><textarea id="editor" wrap="off" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
 >console.log('Hello, world.');
 
@@ -360,7 +371,7 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 			></div
 			><div id="ovl_createRes" data-parent="btn_createRes" class="ide_ovl hidden"
 				><div>create resource</div
-				><ul id="createRes_type"
+				><ul
 					><li><button value="createRes text/plain">plain text</button></li
 					><li><button value="createRes application/json">JSON data</button></li
 					><li><button value="createRes application/javascript">JavaScript code</button></li

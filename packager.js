@@ -124,5 +124,6 @@ fileUtils.loadjs(['lib/jszip.min.js', 'lib/base64.min.js'], true, ()=>{
 			serviceWorkerContent = content.replace(new RegExp('\\{version\\}'), metadata.version);
 			finalize();
 		});
+		download('styles.css', finalize);
 	};
 });

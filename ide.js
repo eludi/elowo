@@ -261,29 +261,32 @@ ide.cacheApplet = async function(main) {
 	}
 
 	let cacheMain = addCacheEntry('main.js', 'async function main(app, console) { '+main+'\n}\n');
+	let terms = '', css = '', scripts = '';
 	let cmd = '_app.currentApplet = '+JSON.stringify(fileUtils.baseName(this.currentApplet))+';\n';
-	let resources = this.resources.serialize(/.*javascript$/, true);
-	let terms = '';
+	let resources = this.resources.serialize();
 	for(let key in resources) {
-		if(!('terms' in resources[key]))
-			continue;
-		terms += '-- '+key+' TERMS OF USE --\n'+resources[key].terms+'\n';
-		delete resources[key].terms;
+		let res = resources[key];
+		if('terms' in res) {
+			terms += '-- '+key+' TERMS OF USE --\n'+res.terms+'\n';
+			delete res.terms;
+		}
+		if(res.mime=='text/css') {
+			css += '/*-- ' + key + ' --*/\n' + res.resource;
+			delete resources[key];
+		}
+		else if(res.mime.endsWith('javascript')) {
+			scripts += '//-- ' + key + ' --\n' + res.resource+'\n';
+			delete resources[key];
+		}
 	}
 	cmd += '_app.resources.reset('+JSON.stringify(resources)+');\n\n';
 	if(terms !== '')
-	cmd += '/*\n'+terms+'*/\n';
-
-	let scripts = this.resources.serialize(/.*javascript$/, false);
-	for(let key in scripts) {
-		cmd += '//-- '+key+' --\n';
-		if(scripts[key].terms)
-			cmd += '/*\n'+scripts[key].terms+'\n*/\n';
-		cmd += scripts[key].resource+'\n';
-	}
+		cmd += '/*\n'+terms+'*/\n';
+	cmd += scripts;
 
 	let cacheData = addCacheEntry('data.js', cmd);
-	return [ await cacheMain, await cacheData ];
+	let cacheCss = addCacheEntry('styles.css', css);
+	return [ await cacheMain, await cacheData, await cacheCss ];
 }
 ide.newApplet = function() {
 	let newAppletName = (prefix)=>{
@@ -474,14 +477,17 @@ ide.toggleOvl = function(id, open) {
 		ovl.classList.add('hidden');
 	if(ovl.dataset.parent) {
 		let parent = document.getElementById(ovl.dataset.parent);
-		let svg = parent.querySelector('svg').style;
-		if(ovl.classList.contains('hidden')) {
-			svg.background = '';
-			svg.fill = 'white';
-		}
-		else {
-			svg.background = 'white';
-			svg.fill = '#57b';
+		let svg = parent ? parent.querySelector('svg') : null;
+		if(svg) {
+			let style = svg.style;
+			if(ovl.classList.contains('hidden')) {
+				style.background = '';
+				style.fill = 'white';
+			}
+			else {
+				style.background = 'white';
+				style.fill = '#57b';
+			}
 		}
 	}
 }

@@ -70,12 +70,10 @@ window._app = {
 			}
 			return null;
 		},
-		serialize: function(mimePattern = /.*/, negate=false) {
+		serialize: function() {
 			let data = {};
 			this.data.forEach((item, id)=>{
-				if(negate ? item.mime.match(mimePattern) : !item.mime.match(mimePattern))
-					return;
-				let record = {};
+				let record = { mime:item.mime };
 				if(item.url) {
 					record.url = item.url;
 					if(item.terms)
