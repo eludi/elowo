@@ -53,15 +53,24 @@ window._app = {
 				obj.src = dataUrl;
 			}
 			else if(mime.startsWith('font/')) {
-				if(!('FontFace' in window))
-					return _app.error('browser does not support FontFace API');
 				let fontName = name.substr(0, name.indexOf('.'));
 				fontName = fontName.toLowerCase().split('-')
 					.map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
-				obj = new FontFace(fontName, 'url('+dataUrl+')');
-				obj.load().then((loadedFace)=>{ document.fonts.add(loadedFace); }).catch(err=>{
-					_app.error("loading font resource", name, "failed:", err);
-				});
+				if('FontFace' in window) {
+					obj = new FontFace(fontName, 'url('+dataUrl+')');
+					obj.load().then((loadedFace)=>{ document.fonts.add(loadedFace); }).catch(err=>{
+						_app.error("loading font resource", name, "failed:", err);
+					});
+				}
+				else { // Edge browser
+					let style = document.createElement('style');
+					style.type = 'text/css';
+					style.innerHTML = "@font-face { font-family: '"+fontName"';\n"
+						+"\tsrc: url('"+dataUrl
+						+"') format('"+ mime.substr(mime.indexOf('/')+1)+"');\n}";
+					document.getElementsByTagName('head')[0].appendChild(style);
+					//return _app.error('browser does not support FontFace API');
+				}
 			}
 			if(obj) {
 				obj.title = name;
