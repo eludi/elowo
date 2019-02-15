@@ -103,9 +103,10 @@ window._app = {
 			if(item.mime.indexOf("image/")==0)
 				left.appendChild(item.resource);
 			else if(item.mime.indexOf("audio/")==0) {
-				let icon = document.querySelector('#musical_note');
-				left.appendChild(icon.cloneNode(true)).removeAttribute('id');
-				center.appendChild(item.resource).controls = true;
+				let icon = document.querySelector('#musical_note').cloneNode(true);
+				icon.removeAttribute('id');
+				icon.addEventListener('click', ()=>{ item.resource.play(); })
+				left.appendChild(icon);
 			}
 
 			const createButtonFromTemplate = function(selector, value, onclick) {

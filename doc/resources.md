@@ -1,6 +1,8 @@
 # resource handling
 
-Most applications do not solely consist of program code, but also require some static assets, which usually are termed _resources_. Originally the web exclusively consisted of static resources, so it is not surporising that they play a central role in modern web applications as well.
+Most applications do not solely consist of program code, but also require some static assets,
+which usually are termed _resources_. Originally the web exclusively consisted of static resources,
+so it is not surporising that they play a central role in modern web applications as well.
 
 ## Supported file formats
 
@@ -32,8 +34,9 @@ Text-based resources may be viewed and edited within elowo via the following ico
 
 ## Resource terms of use
 
-The internet is full of freely usable resources. Many of them, however, require that their 
-original authors are properly attributed and thier licensing terms and conditions are distributed along them. Elowo facilitates this by allowing you to enter their terms of use via dedicated
+Many (often freely available) resources require that their 
+original authors are properly attributed and their licensing terms and conditions are distributed along them.
+Elowo facilitates this by allowing you to enter their terms of use via dedicated
 auxiliary text editor screens that are associated to each resource item and accessible via the
 terms icon:
 
@@ -43,9 +46,13 @@ On packaging the terms of use are included as comments in your app's source code
 
 ## Resource access
 
-Within the application's source code, resources can be accessed via the method `app.getResource(name)` . For a detailed example, refer to [test_resources](./#./applets/test_resources.json).
+Within the application's source code, resources can be accessed via the method `app.getResource(name)`.
+For detailed examples, refer to [test_resources](./#./applets/test_resources.json) and 
+[TinyMusic_test](./#./applets/TinyMusic_test.json).
 
-Font resources need to be referenced in an element's style or canvas font attribute by their font name, which derives from the file name (file name without suffix, dash characters replaced by spaces, first letters of words uppercase, all other letters lowercase):
+Font resources need to be referenced in an element's style or canvas font attribute by their font name,
+which is derived from the file name (file name without suffix, dash characters replaced by spaces,
+first letters of words uppercase, all other letters lowercase):
 
 ```javascript
 let ctx = app.getCanvasContext();

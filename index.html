@@ -72,12 +72,12 @@ textarea {
 	overflow: auto;
 }
 
-button, .sidebar label, .toolbar label {
+button, .sidebar label, .toolbar label, .clickable {
 	border:0;
 	background:none;
 	opacity:0.75;
 }
-button:hover, .sidebar label:hover, .toolbar label:hover {
+button:hover, .sidebar label:hover, .toolbar label:hover, .clickable:hover {
 	opacity: 1.0;
 	cursor: pointer;
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
@@ -197,17 +197,20 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 
 #files_list li > .center, #resources_list li > .center {
 	flex-grow: 1;
+	margin:0.5em 0;
+	overflow: hidden;
 }
 #resources_list > li > div:first-child > * {
 	width:64px;
 	height:64px;
-	margin-right:1em;
 }
 #files_list button, #resources_list button {
 	width:32px;
 	height:32px;
 }
-
+#files_list li > .center input, #resources_list li > .center input {
+	width: calc(100% - 1em);
+}
 .form {
 	width:100%;
 	height:calc(100% - 48px - 0.5em);
@@ -289,6 +292,9 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 		left: 160px;
 		width:240px;
 	}
+	#resources_list > li > div:first-child {
+		min-width: 64px;
+	}
 }
 		</style>
 	</head>
@@ -323,7 +329,7 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 						><li><button value="doc">documentation</button></li
 						><li><button value="doc legal">legal notices</button></li
 						><li><button value="doc privacy">privacy policy</button></li
-						><li>v1.20190212</li
+						><li>v1.20190213a</li
 					></ul
 				></nav
 				><div id="ovl_transfer" data-parent="btn_transfer" class="ide_ovl hidden"
@@ -417,7 +423,7 @@ button:hover, .sidebar label:hover, .toolbar label:hover {
 				<path d="M 19.924706,7.3694118 12.639764,14.65353 C 12.255176,14.018589 11.780823,13.394353 11.200235,12.817883 10.613881,12.234 9.9797637,11.757176 9.3316465,11.373412 L 16.630588,4.075294 c 0.66953,0.3154118 1.334941,0.7609412 1.933647,1.3596472 0.600353,0.5995294 1.045059,1.2649412 1.360471,1.9344706 z M 11.294117,16 H 8.0000003 v -3.294117 l 0.3952935,-0.395295 c 0.6695287,0.317059 1.3349409,0.762589 1.9336472,1.360471 0.599529,0.600353 1.044235,1.264118 1.36047,1.933647 z M 20.875883,6.4190589 C 20.491294,5.7832941 20.016941,5.1607058 19.436353,4.5834117 18.849177,4.0003528 18.215882,3.5227058 17.567765,3.138941 l 1.138117,-1.1389412 c 0,0 1.647059,0 2.470589,0.8235294 C 22,3.6470587 22,5.2941176 22,5.2941176 Z M 3.9999996,2 C 2.9069375,2 1.9999998,2.9069372 1.9999998,4 v 16 c 0,1.093063 0.9069377,2 1.9999998,2 H 20 c 1.093063,0 2,-0.906937 2,-2 V 7.6582031 L 20,9.65625 V 20 H 3.9999996 V 6 H 12.34375 l 3.998047,-4 z" /></svg></button
 			><button id="btn_delete" title="delete"><svg style="fill:white;" viewBox="0 0 24 24">
 				<path d="M 9 1 C 7.9069372 1 7 1.906937 7 3 L 7 4 L 9 4 L 9 3 L 15 3 L 15 4 L 17 4 L 17 3 C 17 1.906937 16.093063 1 15 1 L 9 1 z M 5 5 C 3.9069372 5 3.4888325 6.0223349 3 7 L 3 9 L 5 9 L 19 9 L 21 9 L 21 7 C 21 5.9069372 20.093063 5 19 5 L 5 5 z M 4 10 L 4 21 C 4 22.093063 4.9069372 23 6 23 L 18 23 C 19.093063 23 20 22.093063 20 21 L 20 10 L 18 10 L 18 21 L 6 21 L 6 10 L 4 10 z M 7 11 L 7 19 L 9 19 L 9 11 L 7 11 z M 11 11 L 11 19 L 13 19 L 13 11 L 11 11 z M 15 11 L 15 19 L 17 19 L 17 11 L 15 11 z " /></svg></button
-			><svg id="musical_note" style="fill:white;" viewBox="0 0 24 24">
+			><svg id="musical_note" class="clickable" style="fill:white;" viewBox="0 0 24 24">
 				<path d="M 20,2.90625 7.5,5.0800781 V 19 h 1 V 8.421875 L 19,6.5957031 V 17 h 1 z" />
 				<path d="m 17,15 c -0.779347,0 -1.492991,0.188406 -2.042969,0.525933 C 14.407053,15.863459 14,16.385192 14,17 c 0,0.614808 0.407053,1.136541 0.957031,1.474067 C 15.507009,18.811594 16.220653,19 17,19 17.779347,19 18.492991,18.811594 19.042969,18.474067 19.592947,18.136541 20,17.614808 20,17 20,16.385192 19.592947,15.863459 19.042969,15.525933 18.492991,15.188406 17.779347,15 17,15 Z" />
 				<path d="M 5.5,17 C 4.7206526,17 4.0070091,17.188406 3.4570312,17.525933 2.9070534,17.863459 2.5,18.385192 2.5,19 c 0,0.614808 0.4070534,1.136541 0.9570312,1.474067 C 4.0070091,20.811594 4.7206526,21 5.5,21 6.2793474,21 6.9929909,20.811594 7.5429688,20.474067 8.0929466,20.136541 8.5,19.614808 8.5,19 8.5,18.385192 8.0929466,17.863459 7.5429688,17.525933 6.9929909,17.188406 6.2793474,17 5.5,17 Z" />
