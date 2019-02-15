@@ -65,7 +65,7 @@ window._app = {
 				else { // Edge browser
 					let style = document.createElement('style');
 					style.type = 'text/css';
-					style.innerHTML = "@font-face { font-family: '"+fontName"';\n"
+					style.innerHTML = "@font-face { font-family: '"+fontName+"';\n"
 						+"\tsrc: url('"+dataUrl
 						+"') format('"+ mime.substr(mime.indexOf('/')+1)+"');\n}";
 					document.getElementsByTagName('head')[0].appendChild(style);
