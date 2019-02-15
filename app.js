@@ -69,6 +69,7 @@ window._app = {
 						+"\tsrc: url('"+dataUrl
 						+"') format('"+ mime.substr(mime.indexOf('/')+1)+"');\n}";
 					document.getElementsByTagName('head')[0].appendChild(style);
+					obj = {};
 					//return _app.error('browser does not support FontFace API');
 				}
 			}
