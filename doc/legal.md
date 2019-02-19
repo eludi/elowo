@@ -64,6 +64,7 @@ individual licenses contained in the `lib` subfolder of elowo's source or to the
 - [FileSaver](https://github.com/eligrey/FileSaver.js/) - an HTML5 saveAs() FileSaver implementation
 - [jszip](https://stuk.github.io/jszip) - a library for creating, reading and editing .zip files
 - [marked](https://github.com/markedjs/marked) - a markdown parser and compiler. Built for speed.
+- [sjcl](https://bitwiseshiftleft.github.io/sjcl) - the Stanford Javascript Crypto Library, for end-to-end encryption
 
 ## Source code
 

@@ -319,6 +319,7 @@ ide.openApplet = function(name, data) {
 	this.editor.reset(name, data.main);
 	this.metaReset(data.meta);
 	this.sidebar.close();
+	this.log("applet "+name+" opened");
 	return data.main;
 };
 ide.importApplet = function(file, data) {
@@ -495,6 +496,73 @@ ide.createResource = function(mime) {
 	this.resources.create(mime);
 	this.toggleOvl('ovl_createRes', false);
 }
+ide.transferApplet = async function(mode) {
+	const baseUrl = 'https://eludi.net/dt/';
+	const finalize = (msg='', err)=>{ // reset UI:
+		document.getElementById('transfer_send_code').value = '';
+		let el = document.querySelector("#transfer_middle > footer > div");
+		el.style.display='';
+		while((el=el.nextElementSibling)!==null)
+			el.style.display = 'none';
+		this.setScreen('editor');
+		if(err)
+			this.error(err);
+		else if(msg)
+			this.log(msg);
+	}
+	const switchToSibling = function(selector, display='block') {
+		let refEl = document.querySelector(selector);
+		for(let el = refEl.parentElement.firstElementChild; el!=null; el=el.nextElementSibling)
+				el.style.display = (el===refEl) ? display : 'none';
+	}
+
+	if(mode == 'send') {
+		this.storeCurrentApplet();
+		const applet = this.applets[this.currentApplet];
+		let data = { main:applet.main, name:fileUtils.baseName(this.currentApplet) }
+		if(!this.resources.empty())
+			data.resources = applet.resources;
+		if(!this.metaEmpty())
+			data.meta = applet.meta;
+
+		let dt = new this.DataTransfer(baseUrl);
+		let key;
+		try {
+			key = await dt.put(JSON.stringify(data));
+		} catch(err) {
+			return finalize(null, 'data transfer failed: '+err);
+		}
+		document.getElementById('transfer_send_code').value = key;
+		return switchToSibling('#transf_send');
+	}
+	else if(mode=='cancel')
+		return finalize('transfer canceled');
+	else if(mode=='finalize')
+		return finalize('transfer access key: '+document.getElementById('transfer_send_code').value);
+	else if(mode == 'enterCode') {
+		switchToSibling('#transf_recv');
+		let input =document.getElementById('transfer_recv_code');
+		input.value = '';
+		input.focus();
+	}
+	else if(mode == 'receive') {
+		let key = document.getElementById('transfer_recv_code').value.toUpperCase();
+		if(!key)
+			return finalize(null, 'access code required');
+		let dt = new this.DataTransfer(baseUrl);
+		let data;
+		try {
+			data = await dt.get(key);
+			data = JSON.parse(data);
+		} catch(err) {
+			return finalize(null, 'data transfer failed: '+err);
+		}
+		if(!data.main || !data.name) 
+			return finalize(null, 'invalid applet received');
+		finalize();
+		this.openApplet(fileUtils.baseName(data.name), data);
+	}
+}
 
 ide.handleUIEvent = function(args) {
 	if(args[0]=='screen') {
@@ -532,6 +600,8 @@ ide.handleUIEvent = function(args) {
 		this.createResource(args[1]);
 	else if(args[0]=='closeAuxEditor')
 		this.closeAuxEditor();
+	else if(args[0]=='transfer')
+		this.transferApplet(args[1]);
 	else
 		this.log('"'+args.join(' ')+'" not yet implemented');
 
