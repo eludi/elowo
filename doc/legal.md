@@ -24,18 +24,23 @@ By using our services, you agree to our privacy policy.
 
 ## User-provided content
 
-*Note: currently elowo does not allow users to provide any content directly via this service. I f such a feature will be added,
-then the following terms apply.*
+Elowo contains a feature to transfer/copy user-provided content ("applets") from one elowo instance to another.
+This transfer technically is a temporary caching of the uploaded content on one of our servers.
+When using this transfer feature, you retain ownership and complete responsibility for the content that you make available via the service and its effects.
+We are not responsible for any public display or misuse of user-provided content.
+We do not pre-screen user-provided content and have no technical means to do it, because the
+data transfer is based on state-of-the-art client-side end-to-end encryption and hashing.
+Nevertheless, we have the right to discontinue this service at any time and
+refuse or remove content that, in our sole discretion, violates any of our terms or policies.
 
-You may create or upload content while using the service. You retain ownership and complete responsibility for the content that you upload or otherwise make available via the service and its effects. We are not responsible for any public display or misuse of user-provided content. We do not pre-screen user-provided content, but we have the right (though not the obligation) to refuse or remove any content that, in our sole discretion, violates any of our terms or policies.
-
-By uploading content to us, you grant us the right to store, parse, and display your content, and make copies as necessary to provide the service, and share it with other users. This license does not grant us the right to sell your content or otherwise distribute or use it outside of the service.
+By transferring / uploading content to us, you grant us the right to temporarily store your content, make your content accessible, and make copies as necessary to provide the service,
+and share it with other users knowing or guessing the access key. This license does not grant us the right to sell your content or otherwise distribute or use it outside of the service.
 
 ## Copyright notice and licensing
 
 ### elowo development environment
 
-elowo is copyright (c) 2018 by Gerald Franz / eludi.net under terms of German law.
+elowo is copyright (c) 2018-2019 by Gerald Franz / eludi.net under terms of German law.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the [GNU Affero General Public License](#license) as

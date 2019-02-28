@@ -36,17 +36,32 @@ In addition, the controller is obliged to inform all recipients to whom it discl
 
 ## III. Information about the data processing
 
-Your data processed when using our website will be deleted or blocked as soon as the purpose for its storage ceases to apply, provided the deletion of the same is not in breach of any statutory storage obligations or unless otherwise stipulated below.
+Your data processed when using our website will be deleted or blocked as soon as the purpose for its storage
+ceases to apply, provided the deletion of the same is not in breach of any statutory storage obligations or
+unless otherwise stipulated below.
+
+For obtaining better insights into the usage of our services and their features, we may track their use and
+store the resulting aggregates on our servers, but solely in a completely anonymized and summary form
+unsuitable to personally indentify any individual user from this information.
+
+The basis for this storage is Art. 6 Para. 1 lit. f) GDPR. Our legitimate interest lies in the improvement,
+stability, functionality, security, and promotion of our website.
 
 ### Server data
 
-For technical reasons, a part of the request data sent by your internet browser to us or to our server provider will be collected, especially to ensure a secure and stable website: server log files record the type and version of your browser, operating system, the website from which you came (referrer URL), the webpages on our site visited, the date and time of your visit, as well as the IP address from which you visited our site in an obfuscated form.
+For technical reasons, a part of the request data sent by your internet browser to us or to our server provider will be collected,
+especially to ensure a secure and stable website: server log files record the type and version of your browser,
+operating system, the website from which you came (referrer URL), the webpages on our site visited,
+the date and time of your visit, as well as the IP address from which you visited our site in an obfuscated form.
 
 The data thus collected will be temporarily stored, but not in association with any other of your data.
 
-The basis for this storage is Art. 6 Para. 1 lit. f) GDPR. Our legitimate interest lies in the improvement, stability, functionality, and security of our website.
+The basis for this storage is Art. 6 Para. 1 lit. f) GDPR. Our legitimate interest lies in the improvement,
+stability, functionality, and security of our website.
 
-The data will be deleted within no more than seven days, unless continued storage is required for evidentiary purposes. In which case, all or part of the data will be excluded from deletion until the investigation of the relevant incident is finally resolved.
+The data will be deleted within no more than seven days, unless continued storage is required for evidentiary
+purposes. In which case, all or part of the data will be excluded from deletion until the investigation of the
+relevant incident is finally resolved.
 
 ### Cookies
 

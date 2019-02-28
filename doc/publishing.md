@@ -1,6 +1,13 @@
 # elowo publishing guide
 
-Currently elowo deliberately abstains from offering any built-in web service for sharing an applet between devices/users or publishing it on the world-wide web. However, the export and package features provide you convenient and flexible means for accomplishing this, without locking you into any proprietary service.
+Currently elowo deliberately abstains from offering a built-in web service for publishing an applet on the world-wide web.
+We just offer a service for temporarily transferring an applet from one device to another using client-side end-to-end encryption
+and temporary caching on our servers. When initiating such a transfer, you obtain a (pseudo-)randomly generated
+access key that you may or may not share with others at your sole discretion. Since this is a transfer and not
+a publishing feature, the time frame for receiving the encrypted is limited to only 5-10 minutes.
+
+For true publishing over longer periods of time, the export and package features provide you convenient
+and flexible means for accomplishing this, without locking you into any proprietary service.
 
 ## applet export
 
