@@ -33,16 +33,17 @@
 	padding: 0;
 }
 body {
-	--editor-fg-color: #68c;
+	--editor-fg-color: #9ad;
 	--editor-bg-color: #109;
-	--main-border-color: #68c;
+	--border-bg-color: #68c;
+	--border-fg-color: #def;
 }
 body, html {
 	overflow: hidden;
 	width: 100%;
 	height: 100%;
 	-webkit-text-size-adjust: 100%;
-	background: var(--main-border-color);
+	background: var(--border-bg-color);
 	font-family: sans-serif;
 	touch-action: none;
 }
@@ -165,7 +166,7 @@ button:hover, .sidebar label:hover, .toolbar label:hover, .clickable:hover {
 #console {
 	font-size: 14px;
 	font-weight: bold;
-	color: #ddf;
+	color: var(--border-fg-color);
 	overflow: hidden;
 	line-height:1.1em;
 	flex-grow: 1;
@@ -387,7 +388,7 @@ button:hover, .sidebar label:hover, .toolbar label:hover, .clickable:hover {
 						><li><button value="doc">documentation</button></li
 						><li><button value="doc legal">legal notices</button></li
 						><li><button value="doc privacy">privacy policy</button></li
-						><li>v1.20190228a</li
+						><li>v1.20190228b</li
 					></ul
 				></nav
 				><textarea id="editor" wrap="off" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false"
