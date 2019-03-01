@@ -1,4 +1,4 @@
-const version = '044';
+const version = '045';
 const cacheWhitelist = ['static_'+version, 'app'];
 
 this.addEventListener('install', (event)=>{
@@ -21,7 +21,7 @@ this.addEventListener('install', (event)=>{
 			'./applets/pocket%20piano.js',
 			'./applets/zoom_test.js',
 			'./applets/env_test.js',
-			//'./doc.html',
+			'./doc.html',
 			'./doc/api.md',
 			'./doc/create.svg',
 			'./doc/edit.svg',
@@ -43,7 +43,7 @@ this.addEventListener('install', (event)=>{
 			'./icon180.png',
 			'./icon192.png',
 			'./icon256.png',
-			'./icon512.png'/*,
+			'./icon512.png',
 			'./',
 			'./app.js',
 			'./dt.js',
@@ -54,7 +54,7 @@ this.addEventListener('install', (event)=>{
 			'./manifest.json',
 			'./packager.js',
 			'./run.html',
-			'./runtime.js'*/
+			'./runtime.js'
 		]);
 	}));
 });
@@ -80,11 +80,6 @@ this.addEventListener('fetch', (event)=>{
 				return;
 			return response || fetch(event.request);
 		})
-		/*
-		fetch(event.request).catch(()=>{ // network falling back to cache
-			return caches.match(event.request);
-		})
-		*/
 	);
 });
 
